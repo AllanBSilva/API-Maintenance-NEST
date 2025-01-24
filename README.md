@@ -1,0 +1,391 @@
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+</p>
+
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+
+## Descrição
+
+Este repositório é um **esqueleto inicial** para projetos utilizando o framework [NestJS](https://github.com/nestjs/nest) com TypeScript. O NestJS é um framework progressivo para construir aplicativos eficientes e escaláveis do lado do servidor. Ele é baseado em Express (ou Fastify) e utiliza uma arquitetura inspirada no Angular, proporcionando um desenvolvimento mais organizado e modular.
+
+
+# API de Manutenção de Equipamentos
+
+Este projeto fornece uma API RESTful para gerenciar informações sobre equipamentos e suas manutenções. Ele permite cadastrar, editar, excluir e consultar equipamentos e suas manutenções associadas. Além disso, oferece funcionalidade de filtros para buscas específicas de equipamentos.
+
+## Funcionalidades
+
+- **Equipamentos**: Cadastro, edição, exclusão e consulta de equipamentos.
+- **Manutenções**: Cadastro, edição, exclusão e consulta de manutenções associadas aos equipamentos.
+- **Filtros**: Suporte a filtros para pesquisa de equipamentos por nome e setor.
+
+## Endpoints da API
+
+### Equipamentos
+
+#### `POST /equipamentos`
+
+Cria um novo equipamento.
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "numeroSerie": "Aadasdas",
+  "patrimonio": "PAT002",
+  "nome": "Equipamento Teste2",
+  "marca": "Marca A",
+  "modelo": "Modelo X",
+  "setor": "Setor 1"
+}
+```
+
+**Resposta de sucesso:**:
+
+```json
+{
+    "numeroSerie": "Aadasdas",
+    "patrimonio": "PAT002",
+    "nome": "Equipamento Teste2",
+    "marca": "Marca A",
+    "modelo": "Modelo X",
+    "setor": "Setor 1",
+    "id": 4
+}
+```
+
+#### `GET /equipamentos`
+
+Consulta todos os equipamentos. É possível passar filtros pela query string (por exemplo, nome e setor).
+
+**Exemplo de URL**:
+
+```bash
+GET /equipamentos?nome=Equipamento 1&setor=Setor 1
+```
+
+**Resposta de sucesso**:
+
+```json
+[
+    {
+        "id": 1,
+        "numeroSerie": "ABC123456",
+        "patrimonio": "PAT001",
+        "nome": "Equipamento Teste2",
+        "marca": "Marca A",
+        "modelo": "Modelo X",
+        "setor": "Setor 1"
+    }
+]
+```
+
+#### `GET /equipamentos/:id`
+
+Consulta um equipamento específico pelo ID.
+
+**Exemplo de URL**:
+
+```bash
+GET /equipamentos/1
+```
+
+**Resposta de sucesso**:
+
+```json
+[
+    {
+        "id": 1,
+        "numeroSerie": "sadasdas",
+        "patrimonio": "PAT001",
+        "nome": "Equipamento Teste2",
+        "marca": "Marca A",
+        "modelo": "Modelo X",
+        "setor": "Setor 1"
+    }
+]
+```
+
+#### `PUT /equipamentos/:id`
+
+Atualiza os dados de um equipamento pelo ID.
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "numeroSerie": "sadasdas",
+  "patrimonio": "PAT001",
+  "nome": "Equipamento Teste2",
+  "marca": "Marca A",
+  "modelo": "Modelo X",
+  "setor": "Setor 1"
+}
+```
+
+**Resposta de sucesso**:
+
+```json
+  {
+    "numeroSerie": "sadasdas",
+    "patrimonio": "PAT001",
+    "nome": "Equipamento Teste2",
+    "marca": "Marca A",
+    "modelo": "Modelo X",
+    "setor": "Setor 1"
+  }
+```
+
+#### `DELETE /equipamentos/:id`
+
+Exclui um equipamento pelo ID.
+
+**Exemplo de URL**:
+
+```bash
+DELETE /equipamentos/1
+```
+
+**Resposta de sucesso**:
+
+```json
+{
+  "message": "Equipamento excluído com sucesso"
+}
+```
+
+### Manutenção
+
+#### `POST /manutencao/:equipamentoId`
+
+Cria uma manutenção associada a um equipamento.
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "tipoManutencao": "Corretiva",
+  "ocorrencia": "Verificação de sistema",
+  "causa": "Problema de software",
+  "solucao": "Atualização do sistema",
+  "dataEntrada": "2025-01-23",
+  "dataSolucao": "2025-01-24",
+  "tecnicoExecutor": "Carlos Silva"
+}
+```
+
+**Resposta de sucesso:**:
+
+```json
+{
+    "tipoManutencao": "Corretiva",
+    "ocorrencia": "Verificação de sistema",
+    "causa": "Problema de software",
+    "solucao": "Atualização do sistema",
+    "dataEntrada": "2025-01-23",
+    "dataSolucao": "2025-01-24",
+    "tecnicoExecutor": "Carlos Silva",
+    "equipamento": {
+        "id": 1,
+        "numeroSerie": "sadasdas",
+        "patrimonio": "PAT001",
+        "nome": "Equipamento Teste2",
+        "marca": "Marca A",
+        "modelo": "Modelo X",
+        "setor": "Setor 1"
+    },
+    "numeroManutencao": "20250000002",
+    "id": 3
+}
+```
+
+#### `GET /manutencao/:id`
+
+Consulta uma manutenção específico pelo ID.
+
+**Exemplo de URL**:
+
+```bash
+GET /manutencao/1
+```
+
+**Resposta de sucesso**:
+
+```json
+{
+    "id": 1,
+    "numeroManutencao": "20250000001",
+    "tipoManutencao": "Preventiva",
+    "ocorrencia": "Verificação de sistema",
+    "causa": "Problema de software",
+    "solucao": "Atualização do sistema",
+    "dataEntrada": "2025-01-23",
+    "dataSolucao": "2025-01-24",
+    "tecnicoExecutor": "Carlos Silva",
+    "equipamento": {
+        "id": 1,
+        "numeroSerie": "sadasdas",
+        "patrimonio": "PAT001",
+        "nome": "Equipamento Teste2",
+        "marca": "Marca A",
+        "modelo": "Modelo X",
+        "setor": "Setor 1"
+    }
+}
+```
+
+#### `PUT /manutencao/:id`
+
+Atualiza os dados de uma emanutenção pelo ID.
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "tipoManutencao": "Corretiva",
+  "ocorrencia": "Falha no sistema",
+  "causa": "Erro no hardware",
+  "solucao": "Substituição de peça",
+  "dataEntrada": "2025-01-23",
+  "dataSolucao": "2025-01-24",
+  "tecnicoExecutor": "Paulo Santos"
+}
+```
+
+**Resposta de sucesso**:
+
+```json
+{
+    "id": 3,
+    "numeroManutencao": "20250000002",
+    "tipoManutencao": "Corretiva",
+    "ocorrencia": "Falha no sistema",
+    "causa": "Erro no hardware",
+    "solucao": "Substituição de peça",
+    "dataEntrada": "2025-01-23",
+    "dataSolucao": "2025-01-24",
+    "tecnicoExecutor": "Paulo Santos"
+}
+```
+
+#### `DELETE /manutencao/:id`
+
+Exclui uma manutenção pelo ID.
+
+**Exemplo de URL**:
+
+```bash
+DELETE /manutencao/1
+```
+
+**Resposta de sucesso**:
+
+```json
+{
+  "message": "Manutenção excluída com sucesso"
+}
+```
+#### `GET /manutencao/equipamento/:equipamentoId`
+
+Consulta todas as manutenções associadas a um equipamento.
+
+**Exemplo de URL**:
+
+```bash
+GET /manutencao/equipamento/1
+```
+
+**Resposta de sucesso**:
+
+```json
+[
+    {
+        "id": 1,
+        "numeroManutencao": "20250000001",
+        "tipoManutencao": "Preventiva",
+        "ocorrencia": "Verificação de sistema",
+        "causa": "Problema de software",
+        "solucao": "Atualização do sistema",
+        "dataEntrada": "2025-01-23",
+        "dataSolucao": "2025-01-24",
+        "tecnicoExecutor": "Carlos Silva"
+    }
+]
+```
+
+# Como rodar o projeto
+
+## 1 - Clone este repositório:
+
+
+```bash
+
+git clone https://github.com/seu-usuario/manutencao-equipamentos.git
+
+```
+
+## 2 - Instale as dependências:
+
+
+```bash
+
+cd manutencao-equipamentos
+npm install
+
+```
+
+## 3 - Rode o servidor:
+
+
+```bash
+
+npm run start
+
+```
+O servidor estará rodando em http://localhost:3000.
+
+
+# Banco de Dados
+
+- A aplicação utiliza o **SQLite** como banco de dados para persistência de dados.
+- A tabela de ***equipamentos e manutenções*** são criadas automaticamente ao iniciar o servidor, usando as entidades definidas no projeto.
+
+# Contribuições
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e enviar pull requests.
+
+
+## License
+
+Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+
+## Explicação do conteúdo:
+- **Introdução**: Apresenta o propósito da API.
+- **Funcionalidades**: Descreve as principais funcionalidades da API (Equipamentos, Manutenções e Filtros).
+- **Endpoints**: Explica todos os endpoints disponíveis, com exemplos de requisições e respostas.
+- **Como rodar o projeto**: Passos para rodar a API localmente.
+- **Banco de Dados**: Informações sobre o banco de dados utilizado (SQLite) e a criação automática de tabelas.
+- **Contribuições**: Como os desenvolvedores podem contribuir para o projeto.
+
+
+
