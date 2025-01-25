@@ -10,13 +10,13 @@ import { AppController } from './app.controller';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'manutencao_db',  // Altere para o nome do seu banco de dados
-      entities: [Equipamento, Manutencao],  // Adicione as entidades aqui
-      synchronize: true,  // Somente para desenvolvimento, em produção coloque como false
+      database: 'manutencao_db', 
+      entities: [Equipamento, Manutencao], 
+      synchronize: true, 
     }),
     EquipamentosModule,
     ManutencaoModule,
   ],
-  controllers: [AppController], // Adicione o AppController aqui
+  controllers: [AppController],
 })
 export class AppModule {}

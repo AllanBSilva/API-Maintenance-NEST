@@ -7,8 +7,8 @@ import { EquipamentosModule } from '../equipamentos/equipamentos.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Manutencao]), // Registra a entidade Manutencao
-    EquipamentosModule,  // Importando EquipamentosModule
+    TypeOrmModule.forFeature([Manutencao]), 
+    EquipamentosModule,
   ],
   providers: [ManutencaoService],
   controllers: [ManutencaoController],

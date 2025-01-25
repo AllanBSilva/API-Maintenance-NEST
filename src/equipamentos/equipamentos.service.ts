@@ -38,7 +38,7 @@ export class EquipamentosService {
         return result;
       }
 
-    async findOne(id: number): Promise<Equipamento> {
+    async findOne(id: number): Promise<Equipamento | null>{
     const equipamento = await this.equipamentoRepository.findOne({
         where: { id },
     });

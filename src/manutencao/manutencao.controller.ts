@@ -46,7 +46,6 @@ export class ManutencaoController {
       if (!manutencaoExistente) {
         throw new NotFoundException(`Manutenção com ID ${id} não encontrada.`);
       }
-
       // Exclua a manutenção se ela existir
       await this.manutencaoService.deleteManutencao(id);
 

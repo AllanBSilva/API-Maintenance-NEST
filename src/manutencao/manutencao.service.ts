@@ -109,17 +109,27 @@ async findManutencaoById(id: number): Promise<Manutencao> {
 }
 
   // Buscar manutenções de um equipamento
-  async findManutencaoByEquipamento(equipamentoId: number): Promise<Manutencao[]> {
+  async findManutencaoByEquipamento(equipamentoId: number): Promise<Manutencao[] | { message: string }> {
     try {
+      // Verifica se o equipamento existe
       const equipamento = await this.equipamentoRepository.findOne({
         where: { id: equipamentoId },
       });
-
+  
       if (!equipamento) {
         throw new NotFoundException(`Equipamento com ID ${equipamentoId} não encontrado`);
       }
-
-      return this.manutencaoRepository.find({ where: { equipamento } });
+  
+      // Buscar as manutenções associadas ao equipamento
+      const manutencoes = await this.manutencaoRepository.find({ where: { equipamento } });
+  
+      // Se não houver manutenções associadas, retorna uma mensagem dizendo que o equipamento ainda não tem manutenção
+      if (manutencoes.length === 0) {
+        return { message: `Ainda não há manutenções registradas para o equipamento com ID ${equipamentoId}` };
+      }
+  
+      // Caso contrário, retorna as manutenções encontradas
+      return manutencoes;
     } catch (error) {
       throw new InternalServerErrorException(`Erro ao buscar manutenções: ${error.message}`);
     }

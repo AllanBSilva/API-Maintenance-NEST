@@ -87,16 +87,22 @@ export class EquipamentoController {
       // Verifique se o equipamento existe antes de tentar atualizá-lo
       const equipamentoExistente = await this.equipamentoService.findOne(id);
       if (!equipamentoExistente) {
+        // Se o equipamento não for encontrado, lança a exceção com a mensagem apropriada
         throw new NotFoundException(`Equipamento com ID ${id} não encontrado.`);
       }
   
       // Se o equipamento existir, faça a atualização
       return await this.equipamentoService.update(id, updateEquipamentoDto);
     } catch (error) {
-      // Lança um erro detalhado caso o equipamento não seja encontrado ou outro erro ocorra
-      throw new NotFoundException(`Erro ao atualizar equipamento: ${error.message}`);
+      // Se ocorrer um erro, relance a exceção original sem adicionar um prefixo extra
+      if (error instanceof NotFoundException) {
+        throw error;  // Re-lança o erro sem modificá-lo
+      }
+      // Para outros erros, você pode lançar uma exceção genérica
+      throw new Error(`Erro ao atualizar equipamento: ${error.message}`);
     }
   }
+  
 
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<{ message: string }> {

@@ -36,7 +36,7 @@ Este projeto fornece uma API RESTful para gerenciar informações sobre equipame
 
 - **Equipamentos**: Cadastro, edição, exclusão e consulta de equipamentos.
 - **Manutenções**: Cadastro, edição, exclusão e consulta de manutenções associadas aos equipamentos.
-- **Filtros**: Suporte a filtros para pesquisa de equipamentos por nome e setor.
+- **Filtros**: Suporte a filtros para pesquisa de equipamentos por nome, ID, patrimônio, marca, modelo e setor.
 
 ## Endpoints da API
 
@@ -80,7 +80,7 @@ Consulta todos os equipamentos. É possível passar filtros pela query string (p
 **Exemplo de URL**:
 
 ```bash
-GET /equipamentos?nome=Equipamento 1&setor=Setor 1
+GET /equipamentos?nome=Equipamento Teste&setor=Setor 1
 ```
 
 **Resposta de sucesso**:
@@ -91,7 +91,7 @@ GET /equipamentos?nome=Equipamento 1&setor=Setor 1
         "id": 1,
         "numeroSerie": "ABC123456",
         "patrimonio": "PAT001",
-        "nome": "Equipamento Teste2",
+        "nome": "Equipamento Teste",
         "marca": "Marca A",
         "modelo": "Modelo X",
         "setor": "Setor 1"
@@ -115,9 +115,9 @@ GET /equipamentos/1
 [
     {
         "id": 1,
-        "numeroSerie": "sadasdas",
+        "numeroSerie": "ABC123456",
         "patrimonio": "PAT001",
-        "nome": "Equipamento Teste2",
+        "nome": "Equipamento Teste",
         "marca": "Marca A",
         "modelo": "Modelo X",
         "setor": "Setor 1"
@@ -133,9 +133,9 @@ Atualiza os dados de um equipamento pelo ID.
 
 ```json
 {
-  "numeroSerie": "sadasdas",
+  "numeroSerie": "ABC123456",
   "patrimonio": "PAT001",
-  "nome": "Equipamento Teste2",
+  "nome": "Equipamento Teste",
   "marca": "Marca A",
   "modelo": "Modelo X",
   "setor": "Setor 1"
@@ -146,9 +146,9 @@ Atualiza os dados de um equipamento pelo ID.
 
 ```json
   {
-    "numeroSerie": "sadasdas",
+    "numeroSerie": "ABC123456",
     "patrimonio": "PAT001",
-    "nome": "Equipamento Teste2",
+    "nome": "Equipamento Teste1",
     "marca": "Marca A",
     "modelo": "Modelo X",
     "setor": "Setor 1"
@@ -206,9 +206,9 @@ Cria uma manutenção associada a um equipamento.
     "tecnicoExecutor": "Carlos Silva",
     "equipamento": {
         "id": 1,
-        "numeroSerie": "sadasdas",
+        "numeroSerie": "ABC123456",
         "patrimonio": "PAT001",
-        "nome": "Equipamento Teste2",
+        "nome": "Equipamento Teste",
         "marca": "Marca A",
         "modelo": "Modelo X",
         "setor": "Setor 1"
@@ -243,9 +243,9 @@ GET /manutencao/1
     "tecnicoExecutor": "Carlos Silva",
     "equipamento": {
         "id": 1,
-        "numeroSerie": "sadasdas",
+        "numeroSerie": "ABC123456",
         "patrimonio": "PAT001",
-        "nome": "Equipamento Teste2",
+        "nome": "Equipamento Teste",
         "marca": "Marca A",
         "modelo": "Modelo X",
         "setor": "Setor 1"
