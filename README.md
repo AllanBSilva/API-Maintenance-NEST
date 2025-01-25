@@ -50,7 +50,7 @@ Cria um novo equipamento.
 
 ```json
 {
-  "numeroSerie": "Aadasdas",
+  "numeroSerie": "ABC123456",
   "patrimonio": "PAT002",
   "nome": "Equipamento Teste2",
   "marca": "Marca A",
@@ -63,7 +63,7 @@ Cria um novo equipamento.
 
 ```json
 {
-    "numeroSerie": "Aadasdas",
+    "numeroSerie": "ABC123456",
     "patrimonio": "PAT002",
     "nome": "Equipamento Teste2",
     "marca": "Marca A",
