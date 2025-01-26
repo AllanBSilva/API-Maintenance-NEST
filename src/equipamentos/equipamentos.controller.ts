@@ -1,4 +1,3 @@
-// No controller de Equipamentos (equipamento.controller.ts)
 import { Controller, Response,Post, Get, Body, Param, Put, Delete, Query, NotFoundException, BadRequestException, ConflictException, HttpException, HttpStatus } from '@nestjs/common';
 import { EquipamentosService } from './equipamentos.service';
 import { CreateEquipamentoDto } from '../dto/create-equipamento.dto';

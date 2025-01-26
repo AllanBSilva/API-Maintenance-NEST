@@ -38,6 +38,17 @@ Este projeto fornece uma API RESTful para gerenciar informações sobre equipame
 - **Manutenções**: Cadastro, edição, exclusão e consulta de manutenções associadas aos equipamentos.
 - **Filtros**: Suporte a filtros para pesquisa de equipamentos por nome, ID, patrimônio, marca, modelo e setor.
 
+## Swagger - Documentação da API
+
+### Como acessar a documentação Swagger
+
+O projeto já está configurado com o [Swagger](https://swagger.io/), o que proporciona uma documentação interativa da API. Após rodar o servidor localmente, você pode acessar a documentação da API no seguinte endereço:
+
+```plaintext
+http://localhost:3000/api
+```
+
+
 ## Endpoints da API
 
 ### Equipamentos
