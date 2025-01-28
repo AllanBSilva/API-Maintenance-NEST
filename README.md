@@ -90,8 +90,8 @@ Autentica um usuário e gera um token JWT.
 
 ```json
 {
-  "username": "usuario1",
-  "password": "senha123"
+  "username": "testuser",
+  "password": "testpassword"
 }
 ```
 

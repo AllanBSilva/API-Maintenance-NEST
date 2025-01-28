@@ -3,13 +3,14 @@ import { ManutencaoService } from './maintenance.service';
 import { CreateManutencaoDto } from './dto/create-maintenance.dto';
 import { UpdateManutencaoDto } from './dto/update-maintenance.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('maintenance')
 @UseGuards(AuthGuard) 
+@ApiBearerAuth('access-token')
 export class ManutencaoController {
   constructor(private readonly manutencaoService: ManutencaoService) {}
 
-  // POST para criar manutenção associada a um equipamento
   @Post(':equipmentId')
   async createManutencao(
     @Param('equipmentId') equipamentoId: number,
@@ -21,7 +22,6 @@ export class ManutencaoController {
         createManutencaoDto,
       );
     } catch (error) {
-      // Lançando exceção com mensagem customizada e código 400 para erro de requisição
       throw new InternalServerErrorException(`Erro ao criar manutenção: ${error.message}`);
     }
   }
@@ -34,7 +34,6 @@ export class ManutencaoController {
     try {
       return await this.manutencaoService.updateManutencao(id, updateManutencaoDto);
     } catch (error) {
-      // Lançando exceção com código 404 caso manutenção não seja encontrada
       throw new NotFoundException(`Manutenção com ID ${id} não encontrada ou erro ao atualizar: ${error.message}`);
     }
   }
@@ -43,18 +42,14 @@ export class ManutencaoController {
   @Delete(':id')
   async deleteManutencao(@Param('id') id: number): Promise<{ message: string }> {
     try {
-      // Verifique se a manutenção existe
       const manutencaoExistente = await this.manutencaoService.findManutencaoById(id);
       if (!manutencaoExistente) {
         throw new NotFoundException(`Manutenção com ID ${id} não encontrada.`);
       }
-      // Exclua a manutenção se ela existir
       await this.manutencaoService.deleteManutencao(id);
 
-      // Retorne a mensagem de sucesso
       return { message: 'Manutenção excluída com sucesso' };
     } catch (error) {
-      // Lança um erro detalhado caso a manutenção não seja encontrada ou outro erro ocorra
       throw new NotFoundException(`Erro ao excluir manutenção: ${error.message}`);
     }
   }
@@ -64,7 +59,6 @@ export class ManutencaoController {
     try {
       return await this.manutencaoService.findManutencaoById(id);
     } catch (error) {
-      // Lançando erro 404, caso manutenção não seja encontrada
       throw new NotFoundException(`Manutenção com ID ${id} não encontrada: ${error.message}`);
     }
   }
@@ -74,7 +68,6 @@ export class ManutencaoController {
       try {
         return await this.manutencaoService.findManutencaoByEquipamento(equipamentoId);
       } catch (error) {
-        // Lançando erro 404, caso o equipamento não seja encontrado
         throw new NotFoundException(`Equipamento com ID ${equipamentoId} não encontrado: ${error.message}`);
       }
     }

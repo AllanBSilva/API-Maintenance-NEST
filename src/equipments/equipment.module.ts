@@ -11,7 +11,7 @@ import { UsersModule } from 'src/users/users.module';
   imports: [TypeOrmModule.forFeature([Equipamento]),
     AuthModule,
     UsersModule,
-    JwtModule.register({ secret: 'secretKey', signOptions: { expiresIn: '1h' } }),  // Certifique-se de registrar o JwtModule corretamente
+    JwtModule.register({ secret: 'secretKey', signOptions: { expiresIn: '1h' } }), 
   ],
   providers: [EquipamentosService],
   controllers: [EquipamentoController],

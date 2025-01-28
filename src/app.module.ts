@@ -16,14 +16,14 @@ import { JwtModule } from '@nestjs/jwt';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'manutencao_db',  // Nome do banco de dados
-      entities: [Equipamento, Manutencao, User, Auth],  // Incluindo a entidade User
-      synchronize: true,  // Desabilitando a sincronização automática (para evitar a perda de dados)
+      entities: [Equipamento, Manutencao, User, Auth],
+      synchronize: true, 
     }),
     EquipamentosModule,
     ManutencaoModule,
     UsersModule,
     AuthModule,
-    JwtModule.register({ secret: 'secretKey', signOptions: { expiresIn: '1h' } }),  // Certifique-se de que o JwtModule está registrado
+    JwtModule.register({ secret: 'secretKey', signOptions: { expiresIn: '1h' } }), 
 
   ],
   controllers: [AppController],

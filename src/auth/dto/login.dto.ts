@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginDto {
-  @ApiProperty()
-  codigoEquipamento: string;  // Chave única ou código do equipamento
+  @ApiProperty({ description: 'Nome de usuário do usuário', example: 'testuser' })
+  username: string;
 
-  @ApiProperty()
-  senha: string;  // Senha do equipamento (caso tenha essa validação)
+  @ApiProperty({ description: 'Senha do usuário', example: 'testpassword', type: String })
+  password: string;
 }

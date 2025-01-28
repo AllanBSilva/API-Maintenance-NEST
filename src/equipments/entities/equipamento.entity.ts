@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Manutencao } from '../../maintenance/entities/manutencao.entity'; // Corrigido import
-import { Auth } from 'src/auth/entities/auth.entity';
 
 @Entity()
 export class Equipamento {

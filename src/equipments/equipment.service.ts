@@ -21,7 +21,6 @@ export class EquipamentosService {
     async findWithFilters(filters: any): Promise<Equipamento[]> {
         const queryBuilder = this.equipamentoRepository.createQueryBuilder('equipamento');
       
-        // Adiciona condições de filtro para cada campo recebido
         for (const [key, value] of Object.entries(filters)) {
           if (value) {
             // Se o valor for string, faz uma comparação com LIKE
@@ -48,7 +47,6 @@ export class EquipamentosService {
     return equipamento;
     }
 
-    // Função para verificar se já existe equipamento com o mesmo número de série ou patrimônio
     async findByNumeroSerieOrPatrimonio(
       numeroSerie: string,
       patrimonio: string,
@@ -58,7 +56,6 @@ export class EquipamentosService {
       });
     }
 
-    // Método para criar o equipamento
     async create(createEquipamentoDto: CreateEquipamentoDto) {
     const equipamento = this.equipamentoRepository.create(createEquipamentoDto);
     return this.equipamentoRepository.save(equipamento);
@@ -71,7 +68,6 @@ export class EquipamentosService {
           throw new NotFoundException(`Equipamento com ID ${id} não encontrado`);
         }
     
-        // Atualiza o equipamento com os dados recebidos
         Object.assign(equipamento, updateEquipamentoDto);
     
         return this.equipamentoRepository.save(equipamento);

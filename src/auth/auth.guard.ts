@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';  // O JwtService vem do JwtModule
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';  // Importando a entidade User
-import * as jwt from 'jsonwebtoken'; 
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,7 +15,7 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers['authorization'];
+    const authHeader = request.headers['authorization'] || request.headers['Authorization'];
 
     if (!authHeader) {
       throw new ForbiddenException('Authorization header is missing');

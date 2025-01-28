@@ -4,7 +4,7 @@ import { UsersService } from '../users/users.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from './entities/auth.entity';
 import { Repository } from 'typeorm';
-import { Cron, CronExpression } from '@nestjs/schedule'; // Importando a funcionalidade de agendamento de tarefas
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class AuthService {
@@ -34,8 +34,8 @@ export class AuthService {
     // Salva o token gerado no banco de dados
     const auth = new Auth();
     auth.token = access_token;
-    auth.user = user; // Relacionando o token com o usuário autenticado
-    auth.active = true; // Marque o token como ativo
+    auth.user = user; 
+    auth.active = true;
 
     // Salva o token na tabela 'auth'
     await this.authRepository.save(auth);
@@ -46,21 +46,19 @@ export class AuthService {
   }
 
 // Método para excluir tokens expirados (pode ser chamado periodicamente)
-@Cron(CronExpression.EVERY_HOUR)  // Verifica a cada hora
+@Cron(CronExpression.EVERY_HOUR)
 async removeExpiredTokens() {
   const currentDate = new Date();
   const expiredTokens = await this.authRepository.find();
 
-  // Usar for...of para lidar com async/await corretamente
   const removalPromises = expiredTokens.map(async (auth) => {
-    const tokenExpirationTime = this.jwtService.decode(auth.token)['exp'] * 1000; // Converte expiração para milissegundos
+    const tokenExpirationTime = this.jwtService.decode(auth.token)['exp'] * 1000;
     if (tokenExpirationTime < currentDate.getTime()) {
       // Se o token estiver expirado, vamos desativá-lo
       await this.authRepository.remove(auth); // Remove o token expirado
     }
   });
 
-  // Espera todas as promessas de remoção serem concluídas
   await Promise.all(removalPromises);
 
   console.log('Tokens expirados removidos');

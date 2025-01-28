@@ -4,9 +4,11 @@ import { CreateEquipamentoDto } from './dto/create-equipment.dto';
 import { Equipamento } from './entities/equipamento.entity';
 import { UpdateEquipamentoDto } from './dto/update-equipment.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('equipment')
 @UseGuards(AuthGuard) 
+@ApiBearerAuth('access-token')
 export class EquipamentoController {
   constructor(private readonly equipamentoService: EquipamentosService) {}
 
@@ -44,10 +46,8 @@ export class EquipamentoController {
   @Get()
   async findAll(@Query() query: any, @Response() res): Promise<Equipamento[]> {
     try {
-      // Organize os filtros
       const filters = {};
 
-      // Verifique cada parâmetro recebido e adicione ao filtro
       for (const [key, value] of Object.entries(query)) {
         if (value) {
           filters[key] = value;

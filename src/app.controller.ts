@@ -3,14 +3,15 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { Response } from 'express';
 import * as marked from 'marked';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger'; // Importando as anotações do Swagger
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller()
+@ApiBearerAuth('access-token')
 export class AppController {
   @Get()
-  @ApiOperation({ summary: 'Serve o README.md convertido em HTML' }) // Descrição da operação
-  @ApiResponse({ status: 200, description: 'README.md carregado e convertido com sucesso', type: String }) // Resposta esperada
-  @ApiResponse({ status: 500, description: 'Erro ao carregar o README.md', type: String }) // Caso ocorra um erro
+  @ApiOperation({ summary: 'Serve o README.md convertido em HTML' })
+  @ApiResponse({ status: 200, description: 'README.md carregado e convertido com sucesso', type: String }) 
+  @ApiResponse({ status: 500, description: 'Erro ao carregar o README.md', type: String }) 
   getReadme(@Res() res: Response): void {
     try {
       const readmePath = join(__dirname, '..', 'README.md');
