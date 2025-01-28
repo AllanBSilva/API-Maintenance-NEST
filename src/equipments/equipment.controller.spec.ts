@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EquipamentoController } from './equipamentos.controller';
-import { EquipamentosService } from './equipamentos.service';
+import { EquipamentoController } from './equipment.controller';
+import { EquipamentosService } from './equipment.service';
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import { Equipamento } from './entities/equipamento.entity';
-import { CreateEquipamentoDto } from '../dto/create-equipamento.dto';
-import { UpdateEquipamentoDto } from '../dto/update-equipamento.dto';
-import { Manutencao } from 'src/manutencao/entities/manutencao.entity';
+import { CreateEquipamentoDto } from './dto/create-equipment.dto';
+import { UpdateEquipamentoDto } from './dto/update-equipment.dto';
+import { Manutencao } from 'src/maintenance/entities/manutencao.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 

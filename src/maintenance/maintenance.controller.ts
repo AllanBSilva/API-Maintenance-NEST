@@ -1,16 +1,18 @@
-import { Controller, Post, Body, Param, Put, Delete, Get, NotFoundException, InternalServerErrorException } from '@nestjs/common';
-import { ManutencaoService } from './manutencao.service';
-import { CreateManutencaoDto } from '../dto/create-manutencao.dto';
-import { UpdateManutencaoDto } from '../dto/update-manutencao.dto';
+import { Controller, Post, Body, Param, Put, Delete, Get, NotFoundException, InternalServerErrorException, UseGuards } from '@nestjs/common';
+import { ManutencaoService } from './maintenance.service';
+import { CreateManutencaoDto } from './dto/create-maintenance.dto';
+import { UpdateManutencaoDto } from './dto/update-maintenance.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
-@Controller('manutencao')
+@Controller('maintenance')
+@UseGuards(AuthGuard) 
 export class ManutencaoController {
   constructor(private readonly manutencaoService: ManutencaoService) {}
 
   // POST para criar manutenção associada a um equipamento
-  @Post(':equipamentoId')
+  @Post(':equipmentId')
   async createManutencao(
-    @Param('equipamentoId') equipamentoId: number,
+    @Param('equipmentId') equipamentoId: number,
     @Body() createManutencaoDto: CreateManutencaoDto,
   ) {
     try {
@@ -67,7 +69,7 @@ export class ManutencaoController {
     }
   }
     // Buscar manutenções de um equipamento
-    @Get('equipamento/:equipamentoId')
+    @Get('equipment/:equipmentId')
     async findAllByEquipamento(@Param('equipamentoId') equipamentoId: number) {
       try {
         return await this.manutencaoService.findManutencaoByEquipamento(equipamentoId);

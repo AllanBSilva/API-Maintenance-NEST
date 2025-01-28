@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Equipamento } from '../../equipamentos/entities/equipamento.entity';
+import { Equipamento } from '../../equipments/entities/equipamento.entity';
 
 @Entity()
 export class Manutencao {

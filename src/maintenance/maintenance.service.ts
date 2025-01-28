@@ -2,9 +2,9 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Manutencao } from './entities/manutencao.entity';
-import { Equipamento } from '../equipamentos/entities/equipamento.entity';
-import { CreateManutencaoDto } from '../dto/create-manutencao.dto';
-import { UpdateManutencaoDto } from '../dto/update-manutencao.dto';
+import { Equipamento } from '../equipments/entities/equipamento.entity';
+import { CreateManutencaoDto } from './dto/create-maintenance.dto';
+import { UpdateManutencaoDto } from './dto/update-maintenance.dto';
 
 @Injectable()
 export class ManutencaoService {

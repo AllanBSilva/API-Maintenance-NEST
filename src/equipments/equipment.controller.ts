@@ -1,10 +1,12 @@
-import { Controller, Response,Post, Get, Body, Param, Put, Delete, Query, NotFoundException, BadRequestException, ConflictException, HttpException, HttpStatus } from '@nestjs/common';
-import { EquipamentosService } from './equipamentos.service';
-import { CreateEquipamentoDto } from '../dto/create-equipamento.dto';
+import { Controller, Response,Post, Get, Body, Param, Put, Delete, Query, NotFoundException, BadRequestException, ConflictException, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { EquipamentosService } from './equipment.service';
+import { CreateEquipamentoDto } from './dto/create-equipment.dto';
 import { Equipamento } from './entities/equipamento.entity';
-import { UpdateEquipamentoDto } from '../dto/update-equipamento.dto';
+import { UpdateEquipamentoDto } from './dto/update-equipment.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
-@Controller('equipamentos')
+@Controller('equipment')
+@UseGuards(AuthGuard) 
 export class EquipamentoController {
   constructor(private readonly equipamentoService: EquipamentosService) {}
 

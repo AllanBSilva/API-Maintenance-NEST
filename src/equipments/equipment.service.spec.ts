@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EquipamentosService } from './equipamentos.service';
+import { EquipamentosService } from './equipment.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Equipamento } from './entities/equipamento.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
-import { CreateEquipamentoDto } from '../dto/create-equipamento.dto';
-import { UpdateEquipamentoDto } from '../dto/update-equipamento.dto';
+import { CreateEquipamentoDto } from './dto/create-equipment.dto';
+import { UpdateEquipamentoDto } from './dto/update-equipment.dto';
 
 describe('EquipamentosService', () => {
   let service: EquipamentosService;

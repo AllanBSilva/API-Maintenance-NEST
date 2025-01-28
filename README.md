@@ -37,6 +37,9 @@ Este projeto fornece uma API RESTful para gerenciar informações sobre equipame
 - **Equipamentos**: Cadastro, edição, exclusão e consulta de equipamentos.
 - **Manutenções**: Cadastro, edição, exclusão e consulta de manutenções associadas aos equipamentos.
 - **Filtros**: Suporte a filtros para pesquisa de equipamentos por nome, ID, patrimônio, marca, modelo e setor.
+- **Autenticação**: Sistema de login com JWT para autenticação de usuários.
+- **Autorização**: Controle de permissões de acesso com base em papéis (roles) de usuários.
+- **Usuários**: Cadastro de novos usuários com a definição de papéis (roles).
 
 ## Swagger - Documentação da API
 
@@ -51,9 +54,71 @@ http://localhost:3000/api
 
 ## Endpoints da API
 
+### Usuários
+
+#### `POST /users/create`
+
+Cria um novo usuário. O campo role é opcional, e se não fornecido, o usuário será criado com o valor 0 (usuário comum).
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "username": "usuario1",
+  "password": "senha123",
+  "role": 1 //Opcional
+}
+```
+
+**Resposta de sucesso:**:
+
+```json
+{
+  "username": "usuario1",
+  "password": "senha123",
+  "role": 1
+}
+```
+
+### Autenticação
+
+#### `POST /auth/login`
+
+Autentica um usuário e gera um token JWT.
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "username": "usuario1",
+  "password": "senha123"
+}
+```
+
+**Resposta de sucesso:**:
+
+```json
+{
+  "access_token": "jwt_token_aqui"
+}
+```
+
 ### Equipamentos
 
-#### `POST /equipamentos`
+#### Controle de Acesso as rotas
+
+Para acessar todas as rotas de equipamentos é exigido que o usuário esteja autenticado para ser acessada.
+
+##### Cabeçalho da requisição:
+
+```headers
+Authorization: Bearer jwt_token_aqui
+```
+
+Todas as requisições devem possuir um Header.
+
+
+#### `POST /equipment`
 
 Cria um novo equipamento.
 
@@ -84,14 +149,14 @@ Cria um novo equipamento.
 }
 ```
 
-#### `GET /equipamentos`
+#### `GET /equipment`
 
 Consulta todos os equipamentos. É possível passar filtros pela query string (por exemplo, nome e setor).
 
 **Exemplo de URL**:
 
 ```bash
-GET /equipamentos?nome=Equipamento Teste&setor=Setor 1
+GET /equipment?nome=Equipamento Teste&setor=Setor 1
 ```
 
 **Resposta de sucesso**:
@@ -110,14 +175,14 @@ GET /equipamentos?nome=Equipamento Teste&setor=Setor 1
 ]
 ```
 
-#### `GET /equipamentos/:id`
+#### `GET /equipment/:id`
 
 Consulta um equipamento específico pelo ID.
 
 **Exemplo de URL**:
 
 ```bash
-GET /equipamentos/1
+GET /equipment/1
 ```
 
 **Resposta de sucesso**:
@@ -136,7 +201,7 @@ GET /equipamentos/1
 ]
 ```
 
-#### `PUT /equipamentos/:id`
+#### `PUT /equipment/:id`
 
 Atualiza os dados de um equipamento pelo ID.
 
@@ -166,14 +231,14 @@ Atualiza os dados de um equipamento pelo ID.
   }
 ```
 
-#### `DELETE /equipamentos/:id`
+#### `DELETE /equipment/:id`
 
 Exclui um equipamento pelo ID.
 
 **Exemplo de URL**:
 
 ```bash
-DELETE /equipamentos/1
+DELETE /equipment/1
 ```
 
 **Resposta de sucesso**:
@@ -186,7 +251,19 @@ DELETE /equipamentos/1
 
 ### Manutenção
 
-#### `POST /manutencao/:equipamentoId`
+#### Controle de Acesso as rotas
+
+Para acessar todas as rotas de equipamentos é exigido que o usuário esteja autenticado para ser acessada.
+
+##### Cabeçalho da requisição:
+
+```headers
+Authorization: Bearer jwt_token_aqui
+```
+
+Todas as requisições devem possuir um Header.
+
+#### `POST /maintenance/:equipmentId`
 
 Cria uma manutenção associada a um equipamento.
 
@@ -229,14 +306,14 @@ Cria uma manutenção associada a um equipamento.
 }
 ```
 
-#### `GET /manutencao/:id`
+#### `GET /maintenance/:id`
 
 Consulta uma manutenção específico pelo ID.
 
 **Exemplo de URL**:
 
 ```bash
-GET /manutencao/1
+GET /maintenance/1
 ```
 
 **Resposta de sucesso**:
@@ -264,9 +341,9 @@ GET /manutencao/1
 }
 ```
 
-#### `PUT /manutencao/:id`
+#### `PUT /maintenance/:id`
 
-Atualiza os dados de uma emanutenção pelo ID.
+Atualiza os dados de uma manutenção pelo ID.
 
 **Exemplo de corpo da requisição**:
 
@@ -298,14 +375,14 @@ Atualiza os dados de uma emanutenção pelo ID.
 }
 ```
 
-#### `DELETE /manutencao/:id`
+#### `DELETE /maintenance/:id`
 
 Exclui uma manutenção pelo ID.
 
 **Exemplo de URL**:
 
 ```bash
-DELETE /manutencao/1
+DELETE /maintenance/1
 ```
 
 **Resposta de sucesso**:
@@ -315,14 +392,14 @@ DELETE /manutencao/1
   "message": "Manutenção excluída com sucesso"
 }
 ```
-#### `GET /manutencao/equipamento/:equipamentoId`
+#### `GET /maintenance/equipment/:equipmentId`
 
 Consulta todas as manutenções associadas a um equipamento.
 
 **Exemplo de URL**:
 
 ```bash
-GET /manutencao/equipamento/1
+GET /maintenance/equipment/1
 ```
 
 **Resposta de sucesso**:
