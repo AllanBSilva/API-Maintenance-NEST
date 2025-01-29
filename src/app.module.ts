@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EquipamentosModule } from './equipments/equipment.module';
 import { ManutencaoModule } from './maintenance/maintenance.module';
-import { Equipamento } from './equipments/entities/equipamento.entity';  // Importe a entidade Equipamento
-import { Manutencao } from './maintenance/entities/manutencao.entity';  // Importe a entidade Manutencao
+import { Equipamento } from './equipments/entities/equipamento.entity';
+import { Manutencao } from './maintenance/entities/manutencao.entity'; 
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';  // Adicionando a entidade User
+import { User } from './users/entities/user.entity'; 
 import { AuthModule } from './auth/auth.module';
 import { Auth } from './auth/entities/auth.entity';
 import { JwtModule } from '@nestjs/jwt';

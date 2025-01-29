@@ -17,7 +17,7 @@ export class AuthService {
 
   // Método de login
   async login(username: string, password: string) {
-    const user = await this.usersService.findByUsername(username);
+    const user = await this.usersService.findByName(username);
     if (!user || !(await user.validatePassword(password))) {
       throw new UnauthorizedException('Usuário ou senha inválidos');
     }
@@ -61,6 +61,5 @@ async removeExpiredTokens() {
 
   await Promise.all(removalPromises);
 
-  console.log('Tokens expirados removidos');
 }
 }
