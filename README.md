@@ -66,6 +66,70 @@ Cria um novo usuário. O campo role é opcional, e se não fornecido, o usuário
 {
   "username": "usuario1",
   "password": "senha123",
+  "email": "seuemail@mail.com",
+  "role": 1 //Opcional
+}
+```
+**Resposta de sucesso:**:
+
+```json
+{
+  "username": "usuario1",
+  "password": "$2b$10$/oJ4tQfXARvaHooSbR4O9umoGkJploaQt6FMjTIsWDqkw0mhB10hO",
+  "email": "seuemail@mail.com",
+  "role": 1,
+  "id": "19b958a2-eaae-46dc-b95b-8d7faf392306"
+}
+```
+#### `GET /users`
+
+Busca todos os usuários do sistema. Esse endpoint é protegido por autenticação, então é necessário fornecer um token de acesso válido.
+
+**Resposta de sucesso:**:
+
+```json
+{
+  "username": "usuario1",
+  "password": "$2b$10$/oJ4tQfXARvaHooSbR4O9umoGkJploaQt6FMjTIsWDqkw0mhB10hO",
+  "email": "seuemail@mail.com",
+  "role": 1,
+  "id": "19b958a2-eaae-46dc-b95b-8d7faf392306"
+}
+```
+
+#### `GET /users/:name`
+
+Busca um usuário pelo nome de usuário fornecido na URL.
+
+**Exemplo de URL**:
+
+```bash
+GET /users/usuario1
+```
+
+**Resposta de sucesso**:
+
+```json
+    {
+    "username": "usuario1",
+    "password": "$2b$10$/oJ4tQfXARvaHooSbR4O9umoGkJploaQt6FMjTIsWDqkw0mhB10hO",
+    "email": "seuemail@mail.com",
+    "role": 1,
+    "id": "19b958a2-eaae-46dc-b95b-8d7faf392306"
+    }
+```
+
+#### `PUT /users/:id`
+
+Atualiza os dados de um usuário, como o nome de usuário, a senha ou o role. O ID do usuário é fornecido na URL.
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "username": "testuser", //Opcional
+  "password": "testpassword", //Opcional
+  "email": "seuemail@mail.com", //Opcional
   "role": 1 //Opcional
 }
 ```
@@ -74,9 +138,96 @@ Cria um novo usuário. O campo role é opcional, e se não fornecido, o usuário
 
 ```json
 {
-  "username": "usuario1",
-  "password": "senha123",
-  "role": 1
+    "username": "testuser",
+    "password": "$2b$10$/oJ4tQfXARvaHooSbR4O9umoGkJploaQt6FMjTIsWDqkw0mhB10hO",
+    "email": "seuemail@mail.com",
+    "role": 1,
+    "id": "19b958a2-eaae-46dc-b95b-8d7faf392306"
+}
+```
+#### `DELETE /users/:id`
+
+Deleta um usuário do sistema, utilizando o ID do usuário fornecido na URL.
+
+**Exemplo de URL**:
+
+```bash
+DELETE /user/19b958a2-eaae-46dc-b95b-8d7faf392306
+```
+
+**Resposta de sucesso**:
+
+```json
+{
+  "message": "Usuário deletado com sucesso"
+}
+```
+**Resposta de erro** (quando o usuário não é encontrado):
+
+```json
+{
+  "message": "Usuário não encontrado",
+  "error": "Not Found",
+  "statusCode": 404
+}
+```
+
+#### `POST /users/recover-password`
+
+Envia um e-mail de recuperação de senha para o usuário. O e-mail contém um link com um token único, permitindo que o usuário redefina sua senha.
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "email": "usuario1@exemplo.com"
+}
+```
+
+**Resposta de sucesso**:
+
+```json
+{
+  "message": "E-mail enviado com sucesso"
+}
+```
+**Resposta de erro** (quando o usuário não é encontrado):
+
+```json
+{
+  "message": "Usuário não encontrado",
+  "error": "Not Found",
+  "statusCode": 404
+}
+```
+
+#### `PATCH /users/reset-password`
+
+Reset da senha do usuário utilizando um token de recuperação. O token é enviado no corpo da requisição e validado para garantir que está correto e não expirou.
+
+**Exemplo de corpo da requisição**:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFsbGFuLWFic25vdm9AaG90bWFpbC5jb20iLCJpYXQiOjE3MzgyNzAyNjQsImV4cCI6MTczODI3Mzg2NH0.2mpcYxj1BmpKMIAbtV88Z6y0K57kwKsJyUUQAeQELHA",
+  "newPassword": "novaSenha123"
+}
+```
+
+**Resposta de sucesso**:
+
+```json
+{
+  "message": "Senha resetada com sucesso"
+}
+```
+**Resposta de erro** (quando o usuário não é encontrado):
+
+```json
+{
+  "message": "Usuário não encontrado",
+  "error": "Not Found",
+  "statusCode": 404
 }
 ```
 
@@ -152,12 +303,6 @@ Cria um novo equipamento.
 #### `GET /equipment`
 
 Consulta todos os equipamentos. É possível passar filtros pela query string (por exemplo, nome e setor).
-
-**Exemplo de URL**:
-
-```bash
-GET /equipment?nome=Equipamento Teste&setor=Setor 1
-```
 
 **Resposta de sucesso**:
 
