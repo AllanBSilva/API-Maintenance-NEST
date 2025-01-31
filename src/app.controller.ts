@@ -10,13 +10,13 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 export class AppController {
   @Get()
   @ApiOperation({ summary: 'Serve o README.md convertido em HTML' })
-  @ApiResponse({ status: 200, description: 'README.md carregado e convertido com sucesso', type: String }) 
-  @ApiResponse({ status: 500, description: 'Erro ao carregar o README.md', type: String }) 
+  @ApiResponse({ status: 200, description: 'README.md carregado e convertido com sucesso', type: String })
+  @ApiResponse({ status: 500, description: 'Erro ao carregar o README.md', type: String })
   getReadme(@Res() res: Response): void {
     try {
       const readmePath = join(__dirname, '..', 'README.md');
       const readmeContent = readFileSync(readmePath, 'utf-8');
-      
+
       // Converte o conteúdo Markdown para HTML
       const htmlContent = marked.parse(readmeContent);
 

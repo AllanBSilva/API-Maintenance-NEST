@@ -130,35 +130,35 @@ describe('EquipamentoController', () => {
 
   describe('remove', () => {
     it('should update the equipamento', async () => {
-        const id = 1;
-        const updateEquipamentoDto: UpdateEquipamentoDto = {
-          nome: 'Equipamento Atualizado',
-        };
-  
-        const mockManutencao: Manutencao = {
-          id: 1,
-          tipoManutencao: 'Corretiva',
-          ocorrencia: 'Falha no sistema',
-          causa: 'Problema de hardware',
-          solucao: 'Substituição de peça',
-          tecnicoExecutor: 'Carlos Silva',
-          dataEntrada: '2025-02-02',
-          dataSolucao: '2025-02-03',
-          numeroManutencao: '',
-          equipamento: new Equipamento(),
-        };
-  
-        const mockEquipamento: Equipamento = {
-          id,
-          manutencao: [mockManutencao],
-          nome: updateEquipamentoDto.nome || '',
-          numeroSerie: '12345',
-          patrimonio: 'AB-1234',
-          marca: 'Marca Teste',
-          modelo: 'Modelo Teste',
-          setor: 'Setor Teste',
-        };
-  
+      const id = 1;
+      const updateEquipamentoDto: UpdateEquipamentoDto = {
+        nome: 'Equipamento Atualizado',
+      };
+
+      const mockManutencao: Manutencao = {
+        id: 1,
+        tipoManutencao: 'Corretiva',
+        ocorrencia: 'Falha no sistema',
+        causa: 'Problema de hardware',
+        solucao: 'Substituição de peça',
+        tecnicoExecutor: 'Carlos Silva',
+        dataEntrada: '2025-02-02',
+        dataSolucao: '2025-02-03',
+        numeroManutencao: '',
+        equipamento: new Equipamento(),
+      };
+
+      const mockEquipamento: Equipamento = {
+        id,
+        manutencao: [mockManutencao],
+        nome: updateEquipamentoDto.nome || '',
+        numeroSerie: '12345',
+        patrimonio: 'AB-1234',
+        marca: 'Marca Teste',
+        modelo: 'Modelo Teste',
+        setor: 'Setor Teste',
+      };
+
 
       jest.spyOn(service, 'findOne').mockResolvedValue(mockEquipamento);
       jest.spyOn(service, 'remove').mockResolvedValue(undefined);

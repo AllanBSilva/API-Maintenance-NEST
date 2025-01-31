@@ -11,10 +11,10 @@ import { UsersModule } from 'src/users/users.module';
   imports: [TypeOrmModule.forFeature([Equipamento]),
     AuthModule,
     UsersModule,
-    JwtModule.register({ secret: 'secretKey', signOptions: { expiresIn: '1h' } }), 
+  JwtModule.register({ secret: 'secretKey', signOptions: { expiresIn: '1h' } }),
   ],
   providers: [EquipamentosService],
   controllers: [EquipamentoController],
   exports: [EquipamentosService, TypeOrmModule],
 })
-export class EquipamentosModule {}
+export class EquipamentosModule { }

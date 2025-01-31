@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EquipamentosModule } from './equipments/equipment.module';
 import { ManutencaoModule } from './maintenance/maintenance.module';
 import { Equipamento } from './equipments/entities/equipamento.entity';
-import { Manutencao } from './maintenance/entities/manutencao.entity'; 
+import { Manutencao } from './maintenance/entities/manutencao.entity';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity'; 
+import { User } from './users/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { Auth } from './auth/entities/auth.entity';
 import { JwtModule } from '@nestjs/jwt';
@@ -17,15 +17,15 @@ import { JwtModule } from '@nestjs/jwt';
       type: 'sqlite',
       database: 'manutencao_db',  // Nome do banco de dados
       entities: [Equipamento, Manutencao, User, Auth],
-      synchronize: true, 
+      synchronize: true,
     }),
     EquipamentosModule,
     ManutencaoModule,
     UsersModule,
     AuthModule,
-    JwtModule.register({ secret: 'secretKey', signOptions: { expiresIn: '1h' } }), 
+    JwtModule.register({ secret: 'secretKey', signOptions: { expiresIn: '1h' } }),
 
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule { }

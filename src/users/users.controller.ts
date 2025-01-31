@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Delete, Param, Put, Get, ConflictException, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Delete, Param, Put, Get, ConflictException, NotFoundException, UseGuards, Patch } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -8,12 +8,10 @@ import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
-@UseGuards(AuthGuard)
 @ApiBearerAuth('access-token')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
-  // Rota para criar um usuário
   @Post('create')
   @ApiOperation({ summary: 'Cria um novo usuário no sistema' })
   @ApiResponse({ status: 201, description: 'Usuário criado com sucesso', type: CreateUserDto })
@@ -26,8 +24,8 @@ export class UsersController {
     }
   }
 
-  // Rota para buscar todos os usuários
   @Get()
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Busca todos os usuários' })
   @ApiResponse({ status: 200, description: 'Lista de usuários', type: [User] })
   @ApiResponse({ status: 404, description: 'Nenhum usuário encontrado' })
@@ -39,8 +37,8 @@ export class UsersController {
     return users;
   }
 
-  // Rota para buscar um usuário pelo nome (username)
   @Get(':name')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Busca um usuário pelo nome de usuário' })
   @ApiResponse({ status: 200, description: 'Usuário encontrado', type: User })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
@@ -52,12 +50,12 @@ export class UsersController {
     return user;
   }
 
-  // Rota para atualizar os dados de um usuário
   @Put(':id')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Atualiza os dados de um usuário' })
   @ApiResponse({ status: 200, description: 'Usuário atualizado', type: User })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
-  @ApiBody({ type: UpdateUserDto })  // DTO de atualização de usuário
+  @ApiBody({ type: UpdateUserDto }) 
   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     const updatedUser = await this.usersService.updateUser(id, updateUserDto);
     if (!updatedUser) {
@@ -66,8 +64,8 @@ export class UsersController {
     return updatedUser;
   }
 
-  // Rota para excluir um usuário
   @Delete(':id')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Deleta um usuário' })
   @ApiResponse({ status: 200, description: 'Usuário deletado com sucesso' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
@@ -77,5 +75,33 @@ export class UsersController {
       throw new NotFoundException('Usuário não encontrado');
     }
     return { message: 'Usuário deletado com sucesso' };
+  }
+
+  @Post('recover-password')
+  @ApiOperation({ summary: 'Envia um e-mail de recuperação de senha' })
+  @ApiResponse({ status: 200, description: 'E-mail de recuperação enviado' })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
+  async sendPasswordRecoveryEmail(@Body('email') email: string): Promise<{ message: string }> {
+    try {
+      await this.usersService.sendPasswordRecoveryEmail(email);
+      return { message: 'E-mail enviado com sucesso' };
+    } catch (error) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+  }
+
+  @Patch('reset-password')
+  @ApiOperation({ summary: 'Reseta a senha do usuário com o token' })
+  @ApiResponse({ status: 200, description: 'Senha resetada com sucesso' })
+  @ApiResponse({ status: 400, description: 'Token inválido ou expirado' })
+  async resetPassword(@Body() body: { token: string; newPassword: string }) {
+    const { token, newPassword } = body;
+    try {
+      // Chama o serviço de reset de senha
+      await this.usersService.resetPassword(token, newPassword);
+      return { message: 'Senha resetada com sucesso' };
+    } catch (error) {
+      throw new NotFoundException('Token inválido ou expirado');
+    }
   }
 }

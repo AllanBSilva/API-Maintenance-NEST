@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Equipamento } from './entities/equipamento.entity';
-import { Manutencao } from 'src/maintenance/entities/manutencao.entity';
 import { CreateEquipamentoDto } from './dto/create-equipment.dto';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateEquipamentoDto } from './dto/update-equipment.dto';

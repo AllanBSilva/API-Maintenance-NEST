@@ -14,14 +14,13 @@ export class ManutencaoService {
     private readonly manutencaoRepository: Repository<Manutencao>,
     @InjectRepository(Equipamento)
     private readonly equipamentoRepository: Repository<Equipamento>,
-  ) {}
+  ) { }
 
   async createManutencaoParaEquipamento(
     equipamentoId: number,
     createManutencaoDto: CreateManutencaoDto,
   ) {
     try {
-      // Verificar se o equipamento existe
       const equipamento = await this.equipamentoRepository.findOne({
         where: { id: equipamentoId },
       });
@@ -30,7 +29,6 @@ export class ManutencaoService {
         throw new NotFoundException(`Equipamento com ID ${equipamentoId} não encontrado`);
       }
 
-      // Gerar o número da manutenção
       const anoAtual = new Date().getFullYear().toString();
       const ultimoNumeroManutencao = await this.manutencaoRepository
         .createQueryBuilder('manutencao')
@@ -38,25 +36,21 @@ export class ManutencaoService {
         .where('manutencao.numeroManutencao LIKE :ano', { ano: `${anoAtual}%` })
         .getRawOne();
 
-      // Definir o número sequencial
       const sequencial = ultimoNumeroManutencao?.max ? ultimoNumeroManutencao.max + 1 : 1;
 
       // Formatar o número da manutenção, ex: 2025000001
       const numeroManutencao = `${anoAtual}${sequencial.toString().padStart(7, '0')}`;
 
-      // Criar a manutenção e associar ao equipamento
       const manutencao = this.manutencaoRepository.create(createManutencaoDto);
       manutencao.equipamento = equipamento;
       manutencao.numeroManutencao = numeroManutencao;
 
-      // Salvar a manutenção associada ao equipamento
       return this.manutencaoRepository.save(manutencao);
     } catch (error) {
       throw new InternalServerErrorException(`Erro ao criar manutenção: ${error.message}`);
     }
   }
 
-  // Editando manutenção
   async updateManutencao(id: number, updateManutencaoDto: UpdateManutencaoDto): Promise<Manutencao> {
     try {
       const manutencao = await this.manutencaoRepository.findOne({ where: { id } });
@@ -73,62 +67,53 @@ export class ManutencaoService {
     }
   }
 
+  async deleteManutencao(id: number): Promise<void> {
+    try {
+      const manutencao = await this.manutencaoRepository.findOne({ where: { id } });
 
-// Excluir manutenção
-async deleteManutencao(id: number): Promise<void> {
-  try {
-    const manutencao = await this.manutencaoRepository.findOne({ where: { id } });
+      if (!manutencao) {
+        throw new NotFoundException(`Manutenção com ID ${id} não encontrada`);
+      }
 
-    if (!manutencao) {
-      throw new NotFoundException(`Manutenção com ID ${id} não encontrada`);
+      await this.manutencaoRepository.remove(manutencao);
+    } catch (error) {
+      throw new InternalServerErrorException(`Erro ao excluir manutenção: ${error.message}`);
     }
-
-    await this.manutencaoRepository.remove(manutencao);
-  } catch (error) {
-    throw new InternalServerErrorException(`Erro ao excluir manutenção: ${error.message}`);
   }
-}
 
+  async findManutencaoById(id: number): Promise<Manutencao> {
+    try {
+      const manutencao = await this.manutencaoRepository.findOne({
+        where: { id },
+        relations: ['equipamento'],
+      });
 
-// Buscar manutenção por ID
-async findManutencaoById(id: number): Promise<Manutencao> {
-  try {
-    const manutencao = await this.manutencaoRepository.findOne({
-      where: { id },
-      relations: ['equipamento'],
-    });
+      if (!manutencao) {
+        throw new NotFoundException(`Manutenção com ID ${id} não encontrada`);
+      }
 
-    if (!manutencao) {
-      throw new NotFoundException(`Manutenção com ID ${id} não encontrada`);
+      return manutencao;
+    } catch (error) {
+      throw new InternalServerErrorException(`Erro ao buscar manutenção: ${error.message}`);
     }
-
-    return manutencao;
-  } catch (error) {
-    throw new InternalServerErrorException(`Erro ao buscar manutenção: ${error.message}`);
   }
-}
 
-  // Buscar manutenções de um equipamento
   async findManutencaoByEquipamento(equipamentoId: number): Promise<Manutencao[] | { message: string }> {
     try {
-      // Verifica se o equipamento existe
       const equipamento = await this.equipamentoRepository.findOne({
         where: { id: equipamentoId },
       });
-  
+
       if (!equipamento) {
         throw new NotFoundException(`Equipamento com ID ${equipamentoId} não encontrado`);
       }
-  
-      // Buscar as manutenções associadas ao equipamento
+
       const manutencoes = await this.manutencaoRepository.find({ where: { equipamento } });
-  
-      // Se não houver manutenções associadas, retorna uma mensagem dizendo que o equipamento ainda não tem manutenção
+
       if (manutencoes.length === 0) {
         return { message: `Ainda não há manutenções registradas para o equipamento com ID ${equipamentoId}` };
       }
-  
-      // Caso contrário, retorna as manutenções encontradas
+
       return manutencoes;
     } catch (error) {
       throw new InternalServerErrorException(`Erro ao buscar manutenções: ${error.message}`);

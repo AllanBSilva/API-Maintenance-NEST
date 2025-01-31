@@ -12,11 +12,11 @@ export class Auth {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })  // Criando o campo createdAt
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   // Relação com a entidade User
   @ManyToOne(() => User, (user) => user.auths, { eager: true })
-  @JoinColumn({ name: 'user_id' })  // Relaciona com a coluna 'user_id'
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }

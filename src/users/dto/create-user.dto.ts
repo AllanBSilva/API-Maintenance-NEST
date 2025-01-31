@@ -8,6 +8,14 @@ export class CreateUserDto {
   password: string;
 
   @ApiProperty({
+    description: 'Email do usuário',
+    example: 'user@example.com',
+    required: true,
+  })
+  email: string; // Novo campo para o e-mail
+
+
+  @ApiProperty({
     description: 'Papel do usuário. 0 = Usuário normal, 1 = Administrador, 2 = Superusuário',
     example: 0,
     required: false,

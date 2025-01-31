@@ -1,46 +1,52 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common'; 
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';  // Importando o DTO
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { EmailService } from 'src/email/email.service';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+    private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
+  ) { }
 
-  // Método para criar um novo usuário
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { username, password, role } = createUserDto;
+    const { username, password, role, email } = createUserDto;
 
-    // Verificar se o nome de usuário já existe
     const existingUser = await this.findByName(username);
     if (existingUser) {
       throw new ConflictException('Usuário já existe');
     }
 
-    // Criação do novo usuário
+    const existingEmail = await this.userRepository.findOne({ where: { email } });
+    if (existingEmail) {
+      throw new ConflictException('Email já está em uso');
+    }
+
     const newUser = this.userRepository.create({
       username,
       password,
       role: role ?? 0,  // Se o role não for fornecido, o valor padrão será 0 (normal)
+      email,
     });
 
-    // Salvar o novo usuário
     await this.userRepository.save(newUser);
 
     return newUser;
   }
-   // Método para buscar todos os usuários
-   async findAll(): Promise<User[]> {
+
+  async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  // Método para buscar usuário pelo nome
   async findByName(name: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { username: name } });
   }
@@ -49,7 +55,6 @@ export class UsersService {
     return this.userRepository.findOne({ where: { id } });
   }
 
-  // Método para atualizar os dados do usuário
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const { username, password, role } = updateUserDto;
 
@@ -59,30 +64,61 @@ export class UsersService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    // Se a senha for alterada, chama o hashPassword para gerar um hash da nova senha
     if (password) {
       user.password = await bcrypt.hash(password, 10);
     }
 
-    // Atualizando o nome de usuário e o papel (role), se fornecidos
     if (username) user.username = username;
     if (role !== undefined) user.role = role;
 
-    // Salvando as alterações no banco de dados
     await this.userRepository.save(user);
 
     return user;
   }
 
-  // Método para deletar um usuário
   async deleteUser(id: string): Promise<User | null> {
     const user = await this.userRepository.findOne({ where: { id } });
-    
+
     if (!user) {
-      return null; // Retorna null se o usuário não for encontrado
+      return null;
     }
-    
-    await this.userRepository.remove(user); // Deleta o usuário
-    return user; // Retorna o usuário deletado
+
+    await this.userRepository.remove(user); 
+    return user; 
+  }
+
+  generatePasswordRecoveryToken(user: User): string {
+    const payload = { email: user.email };
+    return jwt.sign(payload, 'secretKey', { expiresIn: '1h' });
+  }
+
+  async sendPasswordRecoveryEmail(email: string): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const token = this.generatePasswordRecoveryToken(user);
+    await this.emailService.sendRecoveryEmail(user.email, token);
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<User | null> {
+    try {
+      const decoded: any = jwt.verify(token, 'secretKey'); 
+      const email = decoded.email;
+      const user = await this.userRepository.findOne({ where: { email } });
+
+      if (!user) {
+        throw new NotFoundException('Usuário não encontrado');
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
+      await this.userRepository.save(user);
+      return user;
+      
+    } catch (error) {
+      throw new NotFoundException('Token inválido ou expirado');
+    }
   }
 }

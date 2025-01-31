@@ -13,7 +13,10 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ type: 'int', default: 0 }) // Adicionando a coluna role
+  @Column({ unique: true })
+  email: string;  // Novo campo para o e-mail
+
+  @Column({ type: 'int', default: 0 })
   role: number;  // 0 = usuário normal, 1 = administrador, 2 = superusuário
 
   @BeforeInsert()
@@ -24,8 +27,8 @@ export class User {
   async validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
-  
-  @OneToMany(() => Auth, (auth) => auth.user)  // Relação inversa com Auth
+
+  @OneToMany(() => Auth, (auth) => auth.user)
   auths: Auth[];
 
   // Método para verificar se o usuário é superusuário

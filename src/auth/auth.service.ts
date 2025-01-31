@@ -13,7 +13,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
-  ) {}
+  ) { }
 
   // Método de login
   async login(username: string, password: string) {
@@ -34,7 +34,7 @@ export class AuthService {
     // Salva o token gerado no banco de dados
     const auth = new Auth();
     auth.token = access_token;
-    auth.user = user; 
+    auth.user = user;
     auth.active = true;
 
     // Salva o token na tabela 'auth'
@@ -45,21 +45,21 @@ export class AuthService {
     };
   }
 
-// Método para excluir tokens expirados (pode ser chamado periodicamente)
-@Cron(CronExpression.EVERY_HOUR)
-async removeExpiredTokens() {
-  const currentDate = new Date();
-  const expiredTokens = await this.authRepository.find();
+  // Método para excluir tokens expirados (pode ser chamado periodicamente)
+  @Cron(CronExpression.EVERY_HOUR)
+  async removeExpiredTokens() {
+    const currentDate = new Date();
+    const expiredTokens = await this.authRepository.find();
 
-  const removalPromises = expiredTokens.map(async (auth) => {
-    const tokenExpirationTime = this.jwtService.decode(auth.token)['exp'] * 1000;
-    if (tokenExpirationTime < currentDate.getTime()) {
-      // Se o token estiver expirado, vamos desativá-lo
-      await this.authRepository.remove(auth); // Remove o token expirado
-    }
-  });
+    const removalPromises = expiredTokens.map(async (auth) => {
+      const tokenExpirationTime = this.jwtService.decode(auth.token)['exp'] * 1000;
+      if (tokenExpirationTime < currentDate.getTime()) {
+        // Se o token estiver expirado, vamos desativá-lo
+        await this.authRepository.remove(auth); // Remove o token expirado
+      }
+    });
 
-  await Promise.all(removalPromises);
+    await Promise.all(removalPromises);
 
-}
+  }
 }

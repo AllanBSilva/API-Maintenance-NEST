@@ -6,10 +6,10 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('maintenance')
-@UseGuards(AuthGuard) 
+@UseGuards(AuthGuard)
 @ApiBearerAuth('access-token')
 export class ManutencaoController {
-  constructor(private readonly manutencaoService: ManutencaoService) {}
+  constructor(private readonly manutencaoService: ManutencaoService) { }
 
   @Post(':equipmentId')
   async createManutencao(
@@ -62,13 +62,13 @@ export class ManutencaoController {
       throw new NotFoundException(`Manutenção com ID ${id} não encontrada: ${error.message}`);
     }
   }
-    // Buscar manutenções de um equipamento
-    @Get('equipment/:equipmentId')
-    async findAllByEquipamento(@Param('equipamentoId') equipamentoId: number) {
-      try {
-        return await this.manutencaoService.findManutencaoByEquipamento(equipamentoId);
-      } catch (error) {
-        throw new NotFoundException(`Equipamento com ID ${equipamentoId} não encontrado: ${error.message}`);
-      }
+  // Buscar manutenções de um equipamento
+  @Get('equipment/:equipmentId')
+  async findAllByEquipamento(@Param('equipamentoId') equipamentoId: number) {
+    try {
+      return await this.manutencaoService.findManutencaoByEquipamento(equipamentoId);
+    } catch (error) {
+      throw new NotFoundException(`Equipamento com ID ${equipamentoId} não encontrado: ${error.message}`);
     }
+  }
 }

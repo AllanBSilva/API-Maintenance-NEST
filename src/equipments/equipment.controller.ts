@@ -1,4 +1,4 @@
-import { Controller, Response,Post, Get, Body, Param, Put, Delete, Query, NotFoundException, BadRequestException, ConflictException, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Response, Post, Get, Body, Param, Put, Delete, Query, NotFoundException, BadRequestException, ConflictException, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { EquipamentosService } from './equipment.service';
 import { CreateEquipamentoDto } from './dto/create-equipment.dto';
 import { Equipamento } from './entities/equipamento.entity';
@@ -7,16 +7,13 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('equipment')
-@UseGuards(AuthGuard) 
+@UseGuards(AuthGuard)
 @ApiBearerAuth('access-token')
 export class EquipamentoController {
-  constructor(private readonly equipamentoService: EquipamentosService) {}
+  constructor(private readonly equipamentoService: EquipamentosService) { }
 
   @Post()
   async createEquipamento(@Body() createEquipamentoDto: CreateEquipamentoDto) {
-    // Validação do DTO já é feita automaticamente pelo NestJS via class-validator
-
-    // Verificar se o equipamento com o número de série ou patrimônio já existe
     const equipamentoExistente = await this.equipamentoService.findByNumeroSerieOrPatrimonio(
       createEquipamentoDto.numeroSerie,
       createEquipamentoDto.patrimonio,
@@ -32,7 +29,7 @@ export class EquipamentoController {
       throw new BadRequestException('Erro ao criar o equipamento: ' + error.message);
     }
   }
-  
+
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Equipamento> {
     const equipamento = await this.equipamentoService.findOne(id);
@@ -42,7 +39,7 @@ export class EquipamentoController {
     }
     return equipamento;
   }
-  
+
   @Get()
   async findAll(@Query() query: any, @Response() res): Promise<Equipamento[]> {
     try {
@@ -53,11 +50,9 @@ export class EquipamentoController {
           filters[key] = value;
         }
       }
-
       // Chama o serviço para encontrar equipamentos com os filtros
       const equipamentos = await this.equipamentoService.findWithFilters(filters);
 
-      // Verifica se a pesquisa retornou resultados
       if (equipamentos.length === 0) {
         return res.status(HttpStatus.NOT_FOUND).json({
           message: 'Nenhum equipamento encontrado para os filtros fornecidos.',
@@ -68,13 +63,11 @@ export class EquipamentoController {
       return res.status(HttpStatus.OK).json(equipamentos);
 
     } catch (error) {
-      // Logando o erro para depuração
       console.error('Erro ao buscar equipamentos:', error);
 
-      // Retornando o erro via resposta personalizada
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: `Erro ao buscar equipamentos: ${error.message}`,
-        error: error.stack, // Detalhamento da pilha de erro
+        error: error.stack,
       });
     }
   }
@@ -85,42 +78,33 @@ export class EquipamentoController {
     @Body() updateEquipamentoDto: UpdateEquipamentoDto,
   ): Promise<Equipamento> {
     try {
-      // Verifique se o equipamento existe antes de tentar atualizá-lo
       const equipamentoExistente = await this.equipamentoService.findOne(id);
       if (!equipamentoExistente) {
-        // Se o equipamento não for encontrado, lança a exceção com a mensagem apropriada
         throw new NotFoundException(`Equipamento com ID ${id} não encontrado.`);
       }
-  
-      // Se o equipamento existir, faça a atualização
+
       return await this.equipamentoService.update(id, updateEquipamentoDto);
     } catch (error) {
-      // Se ocorrer um erro, relance a exceção original sem adicionar um prefixo extra
       if (error instanceof NotFoundException) {
-        throw error;  // Re-lança o erro sem modificá-lo
+        throw error;
       }
-      // Para outros erros, você pode lançar uma exceção genérica
       throw new Error(`Erro ao atualizar equipamento: ${error.message}`);
     }
   }
-  
+
 
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<{ message: string }> {
     try {
-      // Verifique se o equipamento existe
       const equipamentoExistente = await this.equipamentoService.findOne(id);
       if (!equipamentoExistente) {
         throw new NotFoundException(`Equipamento com ID ${id} não encontrado.`);
       }
-  
-      // Exclua o equipamento se ele existir
+
       await this.equipamentoService.remove(id);
-  
-      // Retorne a mensagem de sucesso
+
       return { message: 'Equipamento excluído com sucesso' };
     } catch (error) {
-      // Lança um erro detalhado caso o equipamento não seja encontrado ou outro erro ocorra
       throw new NotFoundException(`Erro ao excluir equipamento: ${error.message}`);
     }
   }

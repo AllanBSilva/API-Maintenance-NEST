@@ -13,11 +13,11 @@ describe('EquipamentosService', () => {
 
   beforeEach(async () => {
     const mockEquipamentoRepository = {
-        save: jest.fn(),
-        findOne: jest.fn(),
-        create: jest.fn(), 
-        delete: jest.fn(), 
-      };
+      save: jest.fn(),
+      findOne: jest.fn(),
+      create: jest.fn(),
+      delete: jest.fn(),
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EquipamentosService,
@@ -49,7 +49,7 @@ describe('EquipamentosService', () => {
 
       const mockEquipamento = {
         id: 1,
-        manutencao: [], // Adicionando a propriedade 'manutencao'
+        manutencao: [],
         ...createEquipamentoDto,
       };
 
@@ -109,8 +109,8 @@ describe('EquipamentosService', () => {
         manutencao: [],     // Garantindo que a propriedade 'manutencao' seja incluída
       };
 
-      jest.spyOn(repository, 'findOne').mockResolvedValue(mockEquipamento); // Simula encontrar o equipamento
-      jest.spyOn(repository, 'save').mockResolvedValue(mockEquipamento); // Simula a atualização
+      jest.spyOn(repository, 'findOne').mockResolvedValue(mockEquipamento);
+      jest.spyOn(repository, 'save').mockResolvedValue(mockEquipamento); 
 
       const result = await service.update(id, updateEquipamentoDto);
       expect(result).toEqual(mockEquipamento);
@@ -122,7 +122,7 @@ describe('EquipamentosService', () => {
         nome: 'Equipamento Atualizado',
       };
 
-      jest.spyOn(repository, 'findOne').mockResolvedValue(null); // Simula que o equipamento não existe
+      jest.spyOn(repository, 'findOne').mockResolvedValue(null);
 
       try {
         await service.update(id, updateEquipamentoDto);
@@ -141,31 +141,26 @@ describe('EquipamentosService', () => {
         numeroSerie: '12345',
         patrimonio: 'AB-1234',
         nome: 'Equipamento 1',
-        marca: '',          
-        modelo: '',         
-        setor: '',          
-        manutencao: [],     
+        marca: '',
+        modelo: '',
+        setor: '',
+        manutencao: [],
       };
-  
-      // Simula que o equipamento é encontrado
+
       jest.spyOn(repository, 'findOne').mockResolvedValue(mockEquipamento);
-      
-      // Mock do método delete
       jest.spyOn(repository, 'delete').mockResolvedValue({ affected: 1, raw: {} });
-  
-      // Chama o método de remoção
+
       await service.remove(id);
-  
-      // Verifica se o método delete foi chamado com o id correto
+      
       expect(repository.remove).toHaveBeenCalledWith(mockEquipamento);
-  });
-  
+    });
+
     it('should throw NotFoundException if equipamento not found', async () => {
       const id = 999;
-  
+
       // Simula que o equipamento não existe
       jest.spyOn(repository, 'findOne').mockResolvedValue(null);
-  
+
       try {
         // Tenta remover o equipamento
         await service.remove(id);
@@ -176,6 +171,6 @@ describe('EquipamentosService', () => {
       }
     });
   });
-  
-  
+
+
 });

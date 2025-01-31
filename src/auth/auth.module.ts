@@ -19,8 +19,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     ScheduleModule.forRoot(),
     UsersModule,
   ],
-  providers: [AuthService, AuthGuard], 
+  providers: [AuthService, AuthGuard],
   controllers: [AuthController],
   exports: [AuthService, AuthGuard],
 })
-export class AuthModule {}
+export class AuthModule { }
