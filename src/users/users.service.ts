@@ -39,7 +39,6 @@ export class UsersService {
     });
 
     await this.userRepository.save(newUser);
-
     return newUser;
   }
 
@@ -57,7 +56,6 @@ export class UsersService {
 
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const { username, password, role } = updateUserDto;
-
     const user = await this.findById(id);
 
     if (!user) {

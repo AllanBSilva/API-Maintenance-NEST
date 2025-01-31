@@ -15,7 +15,7 @@ export class UsersController {
   @Post('create')
   @ApiOperation({ summary: 'Cria um novo usuário no sistema' })
   @ApiResponse({ status: 201, description: 'Usuário criado com sucesso', type: CreateUserDto })
-  @ApiBody({ type: CreateUserDto }) // DTO de criação de usuário
+  @ApiBody({ type: CreateUserDto })
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     try {
       return await this.usersService.createUser(createUserDto);
@@ -27,7 +27,7 @@ export class UsersController {
   @Get()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Busca todos os usuários' })
-  @ApiResponse({ status: 200, description: 'Lista de usuários', type: [User] })
+  @ApiResponse({ status: 200, description: 'Lista de usuários'})
   @ApiResponse({ status: 404, description: 'Nenhum usuário encontrado' })
   async findAll(): Promise<User[]> {
     const users = await this.usersService.findAll();
@@ -40,7 +40,7 @@ export class UsersController {
   @Get(':name')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Busca um usuário pelo nome de usuário' })
-  @ApiResponse({ status: 200, description: 'Usuário encontrado', type: User })
+  @ApiResponse({ status: 200, description: 'Usuário encontrado'})
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async findByName(@Param('name') name: string): Promise<User> {
     const user = await this.usersService.findByName(name);
@@ -53,7 +53,7 @@ export class UsersController {
   @Put(':id')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Atualiza os dados de um usuário' })
-  @ApiResponse({ status: 200, description: 'Usuário atualizado', type: User })
+  @ApiResponse({ status: 200, description: 'Usuário atualizado'})
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   @ApiBody({ type: UpdateUserDto }) 
   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {

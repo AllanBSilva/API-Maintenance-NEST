@@ -37,7 +37,6 @@ export class AuthService {
     auth.user = user;
     auth.active = true;
 
-    // Salva o token na tabela 'auth'
     await this.authRepository.save(auth);
 
     return {
@@ -54,8 +53,7 @@ export class AuthService {
     const removalPromises = expiredTokens.map(async (auth) => {
       const tokenExpirationTime = this.jwtService.decode(auth.token)['exp'] * 1000;
       if (tokenExpirationTime < currentDate.getTime()) {
-        // Se o token estiver expirado, vamos desativá-lo
-        await this.authRepository.remove(auth); // Remove o token expirado
+        await this.authRepository.remove(auth);
       }
     });
 

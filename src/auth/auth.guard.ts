@@ -28,28 +28,20 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      // Verifique se o token tem o formato esperado
       const tokenParts = token.split('.');
       if (tokenParts.length !== 3) {
         throw new ForbiddenException('Invalid token format');
       }
-
-      // Verificando o token
       const payload = this.jwtService.verify(token, { secret: 'secretKey', algorithms: ['HS256'] });
 
-      // Verificando o conteúdo do payload
       if (!payload || !payload.sub) {
         throw new ForbiddenException('Token payload is invalid');
       }
-
-      // Verifica se o usuário associado ao token existe
       const user = await this.userRepository.findOne({ where: { id: payload.sub.toString() } });
 
       if (!user) {
         throw new ForbiddenException('User not found');
       }
-
-      // Atribuindo o usuário autenticado à requisição
       request.user = user;
 
       return true;

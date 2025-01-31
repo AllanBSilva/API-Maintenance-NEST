@@ -100,9 +100,7 @@ export class EquipamentoController {
       if (!equipamentoExistente) {
         throw new NotFoundException(`Equipamento com ID ${id} não encontrado.`);
       }
-
       await this.equipamentoService.remove(id);
-
       return { message: 'Equipamento excluído com sucesso' };
     } catch (error) {
       throw new NotFoundException(`Erro ao excluir equipamento: ${error.message}`);

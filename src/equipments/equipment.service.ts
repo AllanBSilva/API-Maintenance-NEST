@@ -32,7 +32,6 @@ export class EquipamentosService {
           }
         }
         const result = await queryBuilder.getMany();
-      
         return result;
       }
 
@@ -68,10 +67,8 @@ export class EquipamentosService {
         }
     
         Object.assign(equipamento, updateEquipamentoDto);
-    
         return this.equipamentoRepository.save(equipamento);
       }
-
       async remove(id: number): Promise<void> {
         const equipamento = await this.equipamentoRepository.findOne({ where: { id } });
     
