@@ -39,7 +39,7 @@ Este projeto fornece uma API RESTful para gerenciar informações sobre equipame
 - **Filtros**: Suporte a filtros para pesquisa de equipamentos por nome, ID, patrimônio, marca, modelo e setor.
 - **Autenticação**: Sistema de login com JWT para autenticação de usuários.
 - **Autorização**: Controle de permissões de acesso com base em papéis (roles) de usuários.
-- **Usuários**: Cadastro de novos usuários com a definição de papéis (roles).
+- **Usuários**: Cadastro de novos usuários com a definição de papéis (roles), consultar usuários, consultar por nome de usuário, exclusão edição, reset da senha.
 
 ## Swagger - Documentação da API
 
