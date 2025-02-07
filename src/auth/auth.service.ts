@@ -41,6 +41,12 @@ export class AuthService {
 
     return {
       access_token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role, // Supondo que você tenha esse campo no modelo de usuário
+      },
     };
   }
 

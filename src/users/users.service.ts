@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, Body } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -54,8 +54,24 @@ export class UsersService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  async findWithFilters(filters: any): Promise<User[]> {
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
+
+    for (const [key, value] of Object.entries(filters)) {
+      if (value) {
+        if (typeof value === 'string') {
+          queryBuilder.andWhere(`user.${key} LIKE :${key}`, { [key]: `%${value}%` });
+        } else {
+          queryBuilder.andWhere(`user.${key} = :${key}`, { [key]: value });
+        }
+      }
+    }
+    return queryBuilder.getMany();
+  }
+
+
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const { username, password, role } = updateUserDto;
+    const { username, password, email, role } = updateUserDto;
     const user = await this.findById(id);
 
     if (!user) {
@@ -67,6 +83,7 @@ export class UsersService {
     }
 
     if (username) user.username = username;
+    if (email) user.email = email;
     if (role !== undefined) user.role = role;
 
     await this.userRepository.save(user);
@@ -106,17 +123,17 @@ export class UsersService {
       const decoded: any = jwt.verify(token, 'secretKey'); 
       const email = decoded.email;
       const user = await this.userRepository.findOne({ where: { email } });
-
+  
       if (!user) {
         throw new NotFoundException('Usuário não encontrado');
       }
-
+  
       user.password = await bcrypt.hash(newPassword, 10);
       await this.userRepository.save(user);
       return user;
-      
     } catch (error) {
       throw new NotFoundException('Token inválido ou expirado');
     }
   }
+  
 }

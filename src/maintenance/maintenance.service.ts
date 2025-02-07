@@ -119,5 +119,29 @@ export class ManutencaoService {
       throw new InternalServerErrorException(`Erro ao buscar manutenções: ${error.message}`);
     }
   }
+  // Método simplificado para buscar manutenções com filtros
+  async findWithFilters(filters: any): Promise<Manutencao[]> {
+    const queryBuilder = this.manutencaoRepository.createQueryBuilder('manutencao');
+
+    // Itera sobre os filtros e aplica as condições na consulta
+    for (const [key, value] of Object.entries(filters)) {
+      if (value) {
+        if (typeof value === 'string') {
+          queryBuilder.andWhere(`manutencao.${key} LIKE :${key}`, { [key]: `%${value}%` });
+        } else {
+          queryBuilder.andWhere(`manutencao.${key} = :${key}`, { [key]: value });
+        }
+      }
+    }
+    queryBuilder.leftJoinAndSelect('manutencao.equipamento', 'equipamento');
+
+    // Executa a consulta e retorna o resultado
+    return queryBuilder.getMany();
+  }
+  async findAll(): Promise<Manutencao[]> {
+    return this.manutencaoRepository.find({
+      relations: ['equipamento'], // Isso carrega a relação com o equipamento junto
+    });
+  }
 }
 

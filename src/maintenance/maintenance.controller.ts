@@ -1,9 +1,10 @@
-import { Controller, Post, Body, Param, Put, Delete, Get, NotFoundException, InternalServerErrorException, UseGuards } from '@nestjs/common';
+import { Controller, Response, Post, Body, Param, Put, Delete, Get, NotFoundException, InternalServerErrorException, UseGuards, HttpStatus, Query } from '@nestjs/common';
 import { ManutencaoService } from './maintenance.service';
 import { CreateManutencaoDto } from './dto/create-maintenance.dto';
 import { UpdateManutencaoDto } from './dto/update-maintenance.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Manutencao } from './entities/manutencao.entity';
 
 @Controller('maintenance')
 @UseGuards(AuthGuard)
@@ -71,4 +72,47 @@ export class ManutencaoController {
       throw new NotFoundException(`Equipamento com ID ${equipamentoId} não encontrado: ${error.message}`);
     }
   }
+  @Get()
+  async findAll(@Query() query: any, @Response() res): Promise<Manutencao[]> {
+    try {
+      const filters = {};
+  
+      // Itera pelos filtros da query e adiciona ao objeto de filtros
+      for (const [key, value] of Object.entries(query)) {
+        if (value) {
+          filters[key] = value;
+        }
+      }
+  
+      // Chama o serviço para encontrar manutenções com os filtros
+      const manutenções = await this.manutencaoService.findWithFilters(filters);
+  
+      if (manutenções.length === 0) {
+        return res.status(HttpStatus.NOT_FOUND).json({
+          message: 'Nenhuma manutenção encontrada para os filtros fornecidos.',
+        });
+      }
+  
+      // Formata as manutenções removendo o objeto 'equipamento' e mantendo apenas 'equipamentoId'
+      const formattedManutencoes = manutenções.map(manutencao => {
+        const { equipamento, ...rest } = manutencao; // Remove a propriedade 'equipamento'
+        return {
+          ...rest,
+          equipamentoId: equipamento?.id, // Inclui apenas o ID do equipamento
+        };
+      });
+  
+      // Retorna as manutenções formatadas com status 200
+      return res.status(HttpStatus.OK).json(formattedManutencoes);
+  
+    } catch (error) {
+      console.error('Erro ao buscar manutenções:', error);
+  
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: `Erro ao buscar manutenções: ${error.message}`,
+        error: error.stack,
+      });
+    }
+  }
+
 }

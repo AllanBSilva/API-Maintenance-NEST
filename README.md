@@ -83,7 +83,7 @@ Cria um novo usuário. O campo role é opcional, e se não fornecido, o usuário
 ```
 #### `GET /users`
 
-Busca todos os usuários do sistema. Esse endpoint é protegido por autenticação, então é necessário fornecer um token de acesso válido.
+Busca todos os usuários do sistema. É possível passar filtros pela query string (por nome, email, tipo, role, ID). Esse endpoint é protegido por autenticação, então é necessário fornecer um token de acesso válido.
 
 **Resposta de sucesso:**:
 
@@ -448,6 +448,32 @@ Cria uma manutenção associada a um equipamento.
     },
     "numeroManutencao": "20250000002",
     "id": 3
+}
+```
+#### `GET /maintenance`
+
+Consulta todas as manutenções registradas,podendo ser aplicados filtros pela query string (por equipamentoid, tipomanutenção, dataentra, datasolução e todos os outros campos). Esse endpoint é protegido por autenticação, então é necessário fornecer um token de acesso válido.
+
+**Exemplo de URL**:
+
+```bash
+GET /maintenance?tipoManutencao=Corretiva
+```
+
+**Resposta de sucesso**:
+
+```json
+{
+    "id": 1,
+    "numeroManutencao": "20250000001",
+    "tipoManutencao": "Corretiva",
+    "ocorrencia": "Verificação de sistema",
+    "causa": "Problema de software",
+    "solucao": "Atualização do sistema",
+    "dataEntrada": "2025-01-23",
+    "dataSolucao": "2025-01-24",
+    "tecnicoExecutor": "Carlos Silva",
+    "equipamentoid": 1
 }
 ```
 

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Delete, Param, Put, Get, ConflictException, NotFoundException, UseGuards, Patch } from '@nestjs/common';
+import { Controller, Response, Post, Body, Delete, Param, Put, Get, ConflictException, NotFoundException, UseGuards, Patch, UnauthorizedException, HttpStatus, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -29,12 +29,35 @@ export class UsersController {
   @ApiOperation({ summary: 'Busca todos os usuários' })
   @ApiResponse({ status: 200, description: 'Lista de usuários'})
   @ApiResponse({ status: 404, description: 'Nenhum usuário encontrado' })
-  async findAll(): Promise<User[]> {
-    const users = await this.usersService.findAll();
-    if (!users.length) {
-      throw new NotFoundException('Nenhum usuário encontrado');
+  async findAll(@Query() query: any, @Response() res): Promise<User[]> {
+    try {
+      const filters = {};
+
+      // Itera pelos filtros da query e adiciona ao objeto de filtros
+      for (const [key, value] of Object.entries(query)) {
+        if (value) {
+          filters[key] = value;
+        }
+      }
+
+      // Chama o serviço para encontrar os usuários com os filtros
+      const users = await this.usersService.findWithFilters(filters);
+
+      if (users.length === 0) {
+        throw new NotFoundException('Nenhum usuário encontrado para os filtros fornecidos');
+      }
+
+      // Retorna os usuários encontrados com status 200
+      return res.status(HttpStatus.OK).json(users);
+
+    } catch (error) {
+      console.error('Erro ao buscar usuários:', error);
+
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: `Erro ao buscar usuários: ${error.message}`,
+        error: error.stack,
+      });
     }
-    return users;
   }
 
   @Get(':name')
@@ -96,12 +119,17 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Token inválido ou expirado' })
   async resetPassword(@Body() body: { token: string; newPassword: string }) {
     const { token, newPassword } = body;
+
     try {
-      // Chama o serviço de reset de senha
+      // Passando os dois parâmetros (token, newPassword) para o serviço
       await this.usersService.resetPassword(token, newPassword);
+      
       return { message: 'Senha resetada com sucesso' };
     } catch (error) {
-      throw new NotFoundException('Token inválido ou expirado');
+      if (error.message === 'Token inválido ou expirado') {
+        throw new UnauthorizedException('Token inválido ou expirado');
+      }
+      throw new NotFoundException('Erro ao tentar resetar a senha');
     }
   }
 }
