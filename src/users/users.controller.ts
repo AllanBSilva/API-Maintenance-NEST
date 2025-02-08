@@ -27,43 +27,39 @@ export class UsersController {
   @Get()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Busca todos os usuários' })
-  @ApiResponse({ status: 200, description: 'Lista de usuários'})
+  @ApiResponse({ status: 200, description: 'Lista de usuários' })
   @ApiResponse({ status: 404, description: 'Nenhum usuário encontrado' })
   async findAll(@Query() query: any, @Response() res): Promise<User[]> {
     try {
       const filters = {};
 
-      // Itera pelos filtros da query e adiciona ao objeto de filtros
       for (const [key, value] of Object.entries(query)) {
         if (value) {
           filters[key] = value;
         }
       }
 
-      // Chama o serviço para encontrar os usuários com os filtros
       const users = await this.usersService.findWithFilters(filters);
 
       if (users.length === 0) {
         throw new NotFoundException('Nenhum usuário encontrado para os filtros fornecidos');
       }
 
-      // Retorna os usuários encontrados com status 200
       return res.status(HttpStatus.OK).json(users);
 
     } catch (error) {
-      console.error('Erro ao buscar usuários:', error);
-
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: `Erro ao buscar usuários: ${error.message}`,
         error: error.stack,
       });
+      throw new Error(`Erro ao buscar usuários: ${error.message}`);
     }
   }
 
   @Get(':name')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Busca um usuário pelo nome de usuário' })
-  @ApiResponse({ status: 200, description: 'Usuário encontrado'})
+  @ApiResponse({ status: 200, description: 'Usuário encontrado' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async findByName(@Param('name') name: string): Promise<User> {
     const user = await this.usersService.findByName(name);
@@ -76,9 +72,9 @@ export class UsersController {
   @Put(':id')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Atualiza os dados de um usuário' })
-  @ApiResponse({ status: 200, description: 'Usuário atualizado'})
+  @ApiResponse({ status: 200, description: 'Usuário atualizado' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
-  @ApiBody({ type: UpdateUserDto }) 
+  @ApiBody({ type: UpdateUserDto })
   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     const updatedUser = await this.usersService.updateUser(id, updateUserDto);
     if (!updatedUser) {
@@ -121,9 +117,8 @@ export class UsersController {
     const { token, newPassword } = body;
 
     try {
-      // Passando os dois parâmetros (token, newPassword) para o serviço
       await this.usersService.resetPassword(token, newPassword);
-      
+
       return { message: 'Senha resetada com sucesso' };
     } catch (error) {
       if (error.message === 'Token inválido ou expirado') {

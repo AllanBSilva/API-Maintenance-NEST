@@ -8,10 +8,10 @@ export class UpdateUserDto {
   password?: string;
 
   @ApiProperty({ description: 'Email do usuário', example: 'newuser@example.com', required: false })
-  email?: string;  // Novo campo para o e-mail
+  email?: string;
 
   @ApiProperty({
-    description: 'Papel do usuário. 0 = Usuário normal, 1 = Administrador, 2 = Superusuário',
+    description: 'Papel do usuário. 0 = Usuário normal, 1 = Administrador',
     example: 1,
     required: false,
   })

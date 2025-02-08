@@ -14,10 +14,10 @@ export class User {
   password: string;
 
   @Column({ unique: true })
-  email: string;  // Novo campo para o e-mail
+  email: string;
 
   @Column({ type: 'int', default: 0 })
-  role: number;  // 0 = usuário normal, 1 = administrador, 2 = superusuário
+  role: number;  // 0 = usuário normal, 1 = administrador
 
   @BeforeInsert()
   async hashPassword() {
@@ -30,19 +30,4 @@ export class User {
 
   @OneToMany(() => Auth, (auth) => auth.user)
   auths: Auth[];
-
-  // Método para verificar se o usuário é superusuário
-  isSuperUser(): boolean {
-    return this.role === 2;
-  }
-
-  // Método para verificar se o usuário é administrador
-  isAdmin(): boolean {
-    return this.role === 1;
-  }
-
-  // Método para verificar se o usuário é normal
-  isNormalUser(): boolean {
-    return this.role === 0;
-  }
 }

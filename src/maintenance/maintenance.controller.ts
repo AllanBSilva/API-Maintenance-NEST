@@ -26,7 +26,7 @@ export class ManutencaoController {
       throw new InternalServerErrorException(`Erro ao criar manutenção: ${error.message}`);
     }
   }
-  // Editar manutenção
+
   @Put(':id')
   async updateManutencao(
     @Param('id') id: number,
@@ -39,7 +39,6 @@ export class ManutencaoController {
     }
   }
 
-  // Excluir manutenção
   @Delete(':id')
   async deleteManutencao(@Param('id') id: number): Promise<{ message: string }> {
     try {
@@ -63,7 +62,7 @@ export class ManutencaoController {
       throw new NotFoundException(`Manutenção com ID ${id} não encontrada: ${error.message}`);
     }
   }
-  // Buscar manutenções de um equipamento
+
   @Get('equipment/:equipmentId')
   async findAllByEquipamento(@Param('equipamentoId') equipamentoId: number) {
     try {
@@ -76,43 +75,37 @@ export class ManutencaoController {
   async findAll(@Query() query: any, @Response() res): Promise<Manutencao[]> {
     try {
       const filters = {};
-  
-      // Itera pelos filtros da query e adiciona ao objeto de filtros
+
       for (const [key, value] of Object.entries(query)) {
         if (value) {
           filters[key] = value;
         }
       }
-  
-      // Chama o serviço para encontrar manutenções com os filtros
+
       const manutenções = await this.manutencaoService.findWithFilters(filters);
-  
+
       if (manutenções.length === 0) {
         return res.status(HttpStatus.NOT_FOUND).json({
           message: 'Nenhuma manutenção encontrada para os filtros fornecidos.',
         });
       }
-  
-      // Formata as manutenções removendo o objeto 'equipamento' e mantendo apenas 'equipamentoId'
+
       const formattedManutencoes = manutenções.map(manutencao => {
-        const { equipamento, ...rest } = manutencao; // Remove a propriedade 'equipamento'
+        const { equipamento, ...rest } = manutencao;
         return {
           ...rest,
-          equipamentoId: equipamento?.id, // Inclui apenas o ID do equipamento
+          equipamentoId: equipamento?.id,
         };
       });
-  
-      // Retorna as manutenções formatadas com status 200
       return res.status(HttpStatus.OK).json(formattedManutencoes);
-  
+
     } catch (error) {
-      console.error('Erro ao buscar manutenções:', error);
-  
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: `Erro ao buscar manutenções: ${error.message}`,
         error: error.stack,
       });
+
+      throw new Error(`Erro ao buscar manutenções: ${error.message}`);
     }
   }
-
 }

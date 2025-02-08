@@ -16,11 +16,9 @@ export class AppController {
     try {
       const readmePath = join(__dirname, '..', 'README.md');
       const readmeContent = readFileSync(readmePath, 'utf-8');
-
-      // Converte o conteúdo Markdown para HTML
       const htmlContent = marked.parse(readmeContent);
 
-      res.type('html');  // Especificando que o retorno é HTML
+      res.type('html');  
       res.send(htmlContent);
     } catch (error) {
       res.status(500).send('Erro ao carregar o README.md');

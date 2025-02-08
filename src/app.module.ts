@@ -15,7 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'manutencao_db',  // Nome do banco de dados
+      database: 'manutencao_db', 
       entities: [Equipamento, Manutencao, User, Auth],
       synchronize: true,
     }),

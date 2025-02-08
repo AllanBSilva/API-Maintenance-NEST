@@ -50,7 +50,6 @@ export class EquipamentoController {
           filters[key] = value;
         }
       }
-      // Chama o serviço para encontrar equipamentos com os filtros
       const equipamentos = await this.equipamentoService.findWithFilters(filters);
 
       if (equipamentos.length === 0) {
@@ -58,17 +57,15 @@ export class EquipamentoController {
           message: 'Nenhum equipamento encontrado para os filtros fornecidos.',
         });
       }
-
-      // Retorna os equipamentos encontrados com status 200
+      
       return res.status(HttpStatus.OK).json(equipamentos);
 
     } catch (error) {
-      console.error('Erro ao buscar equipamentos:', error);
-
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: `Erro ao buscar equipamentos: ${error.message}`,
         error: error.stack,
       });
+      throw new Error(`Erro ao buscar equipamentos: ${error.message}`);
     }
   }
 
@@ -91,7 +88,6 @@ export class EquipamentoController {
       throw new Error(`Erro ao atualizar equipamento: ${error.message}`);
     }
   }
-
 
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<{ message: string }> {

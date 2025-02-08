@@ -69,7 +69,6 @@ export class UsersService {
     return queryBuilder.getMany();
   }
 
-
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const { username, password, email, role } = updateUserDto;
     const user = await this.findById(id);
@@ -98,8 +97,8 @@ export class UsersService {
       return null;
     }
 
-    await this.userRepository.remove(user); 
-    return user; 
+    await this.userRepository.remove(user);
+    return user;
   }
 
   generatePasswordRecoveryToken(user: User): string {
@@ -120,14 +119,14 @@ export class UsersService {
 
   async resetPassword(token: string, newPassword: string): Promise<User | null> {
     try {
-      const decoded: any = jwt.verify(token, 'secretKey'); 
+      const decoded: any = jwt.verify(token, 'secretKey');
       const email = decoded.email;
       const user = await this.userRepository.findOne({ where: { email } });
-  
+
       if (!user) {
         throw new NotFoundException('Usuário não encontrado');
       }
-  
+
       user.password = await bcrypt.hash(newPassword, 10);
       await this.userRepository.save(user);
       return user;
@@ -135,5 +134,4 @@ export class UsersService {
       throw new NotFoundException('Token inválido ou expirado');
     }
   }
-  
 }

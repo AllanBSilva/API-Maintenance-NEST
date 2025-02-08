@@ -10,9 +10,9 @@ export class EmailService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',  // Configuração do servidor SMTP
-      port: 465,       //587 porta primeiro usada, 465 nova porta
-      secure: true,  // True para 465, false para outros
+      host: 'smtp.gmail.com',
+      port: 465,     
+      secure: true,  
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -21,10 +21,8 @@ export class EmailService {
   }
 
   async sendRecoveryEmail(to: string, token: string): Promise<void> {
-    // Define o URL de recuperação com o token
     const recoveryUrl = `http://localhost:3001/reset-password/${token}`;
     
-    // Define as opções do e-mail
     const mailOptions = {
       from: 'noreply@mail.com', 
       to,
@@ -59,11 +57,9 @@ export class EmailService {
     };
   
     try {
-      // Tenta enviar o e-mail
       await this.transporter.sendMail(mailOptions);
     } catch (error) {
-      // Aqui você pode logar ou tratar erros
-      console.error('Erro ao enviar e-mail de recuperação:', error);
+      throw new Error('Erro ao enviar e-mail de recuperação');
     }
   }
   

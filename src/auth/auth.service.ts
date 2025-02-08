@@ -24,14 +24,12 @@ export class AuthService {
 
     const payload = { username: user.username, sub: user.id.toString() };
 
-    // Gera o token JWT com a expiração de 1 hora
     const access_token = this.jwtService.sign(payload, {
       secret: 'secretKey',
       expiresIn: '1h',
       algorithm: 'HS256',
     });
 
-    // Salva o token gerado no banco de dados
     const auth = new Auth();
     auth.token = access_token;
     auth.user = user;
@@ -45,12 +43,11 @@ export class AuthService {
         id: user.id,
         username: user.username,
         email: user.email,
-        role: user.role, // Supondo que você tenha esse campo no modelo de usuário
+        role: user.role, 
       },
     };
   }
 
-  // Método para excluir tokens expirados (pode ser chamado periodicamente)
   @Cron(CronExpression.EVERY_HOUR)
   async removeExpiredTokens() {
     const currentDate = new Date();
