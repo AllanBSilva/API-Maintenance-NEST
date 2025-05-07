@@ -5,11 +5,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Configuração do CORS para permitir Authorization headers
   app.enableCors({
-    origin: 'http://localhost:3001', // Permite requisições apenas de localhost:3001 (frontend React)
-    allowedHeaders: 'Authorization, Content-Type', // Permite cabeçalhos Authorization e Content-Type
-    methods: 'GET, POST, PUT, DELETE, PATCH', // Métodos permitidos
+    origin: 'http://localhost:3001', 
+    allowedHeaders: 'Authorization, Content-Type', 
+    methods: 'GET, POST, PUT, DELETE, PATCH', 
   });
 
   // Configuração do Swagger
